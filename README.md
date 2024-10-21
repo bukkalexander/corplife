@@ -1,25 +1,48 @@
 # Social media app for learning
 
-## Build instrcutions
 
-### Web
+## Web
 
-Build react app
+### Install
+Install react app dependencies
 
 ```bash
 npm install
 ```
 
+###  Dev / debug
 build for dev (Hot reload)
 
 ```bash
 npm run dev
 ```
 
-build for production
+You can also debug with VS Code using the following `.vscode/launch.json` configuration
+
+```json
+{
+    "configurations": [
+        {
+            "type": "chrome",
+            "name": "http://localhost:5173/",
+            "request": "launch",
+            "url": "http://localhost:5173/",
+            "webRoot": "${workspaceFolder}/web/src"
+        }
+    ]
+}
+```
+
+### Build for production
 
 ```bash
 npm run build
 ```
 
-The build can be found in `dist`
+The build can be found under `dist`
+
+### Run unit tests (react components)
+
+```bash
+npm run test
+```
