@@ -1,68 +1,63 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+/* Ensure the root takes up the full window */
+#root {
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center;     /* Centers vertically */
+    min-height: 100vh;       /* Ensure root takes the entire viewport height */
+    width: 100vw;            /* Full viewport width */
+    background-color: #f4f4f4; /* Background color for root container */
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* Center #questionApp and make it tight around its content */
+#questionApp {
+    background-color: white;  /* Background color for the form container */
+    padding: 20px;            /* Padding around the content */
+    border-radius: 10px;      /* Optional: Rounded corners */
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow */
+    max-width: 500px;         /* Optional: Limit the width */
+    width: 100%;              /* Makes sure it doesn't stretch unnecessarily */
+}
+
+/* Styling for the header */
+#questionHeader h1 {
+    margin-bottom: 10px;
+}
+
+/* Styling for the form */
+#questionForm h1 {
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+}
+
+#questionForm p {
+    margin-bottom: 15px;
+}
+
+/* Style the form elements */
+input[type="radio"] {
+    margin-right: 5px;
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+button:hover {
+    background-color: #0056b3;
 }
+
