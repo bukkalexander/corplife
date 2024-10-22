@@ -1,35 +1,27 @@
-import React, { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div id="questionApp">
+        <div id="questionHeader">
+          <h1>Question Text</h1>
+        </div>
+        <form id="questionForm">
+          <h1>1/20</h1>
+          <p>What does AWS S3 do</p>
+          <input type="radio" name="q1" />
+          <label htmlFor="q1"> S3 bla 1</label><br />
+          <input type="radio" name="q2" />
+          <label htmlFor="q2"> S3 bla 2</label><br />
+          <input type="radio" name="q3" />
+          <label htmlFor="q3"> S3 bla 3</label><br />
+          <input type="radio" name="q4" />
+          <label htmlFor="q4"> S3 bla 4</label><br />
+          <button type="submit">Submit</button>
+        </form>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
   )
 }
 
-export default App
+export default App;
