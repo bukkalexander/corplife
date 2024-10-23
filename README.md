@@ -7,6 +7,7 @@
 Install react app dependencies
 
 ```bash
+cd web
 npm install
 ```
 
