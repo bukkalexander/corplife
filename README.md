@@ -2,6 +2,7 @@
 
 
 ## Web
+Change directory into `web`
 ```bash
 cd web
 ```
