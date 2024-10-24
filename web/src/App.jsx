@@ -1,30 +1,37 @@
 import React, { useState } from 'react';
-import QuestionBoard from './QuestionBoard.jsx'
-import ResultBoard from './ResultBoard.jsx'
+import QuestionBoard from './QuestionBoard.jsx';
+import ResultBoard from './ResultBoard.jsx';
 
 const questionList = [
-  {text:"Q1 What does AWS S3 do",answers:["S3 bla 1","S3 bla 2","S3 bla 3","S3 bla 4"], correctAnswer: 0 }, 
-  {text:"Q2 What does EC2 mean",answers:["S3 bla 1","S3 bla 2","S3 bla 3","S3 bla 4"], correctAnswer: 1 }
+  {
+    text: 'What kind of storage is AWS S3',
+    answers: ['Object storage', 'SQL database', 'Block storage', 'Document database'],
+    correctAnswer: 0,
+  },
+  {
+    text: 'What does EC2 mean',
+    answers: ['Elastic Container Creater', 'Elastic Compute Cloud', 'Ephemeral Code Catalog', 'Error Cloud 2'],
+    correctAnswer: 1,
+  },
 ];
 
 function App() {
-
   const [isQuizCompleted, setIsQuizCompleted] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [score, setScore] = useState(0);
-  
-  const handleSelectedAnswer = (event) => {
-    setSelectedAnswer(event.target.value);
-  };
 
-  const handleIsQuizCompleted = () => {
-    setIsQuizCompleted(true);
-  }
+  const handleSelectedAnswer = (event) => {
+    setSelectedAnswer(Number(event.target.value));
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log(selectedAnswer);
+
+    if (selectedAnswer == questionList[currentQuestionIndex].correctAnswer) {
+      setScore(score + 1);
+    }
 
     if (currentQuestionIndex < questionList.length - 1) {
       if (selectedAnswer == questionList[currentQuestionIndex].correctAnswer) {
@@ -32,15 +39,22 @@ function App() {
       }
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      handleIsQuizCompleted();
+      setIsQuizCompleted(true)
     }
   };
 
   const question = questionList[currentQuestionIndex];
   const boardHeaderText = `${currentQuestionIndex + 1} / ${questionList.length}`;
-  return (
-    <>{ isQuizCompleted ? <ResultBoard score={score} totalQuestions={questionList.length} /> : <QuestionBoard onSubmit={handleSubmit} question={question} headerText={boardHeaderText} onSelectedAnswer={handleSelectedAnswer}/> }</>
-  )
+  return isQuizCompleted ? (
+    <ResultBoard score={score} totalQuestions={questionList.length} />
+  ) : (
+    <QuestionBoard
+      onSubmit={handleSubmit}
+      question={question}
+      headerText={boardHeaderText}
+      onSelectedAnswer={handleSelectedAnswer}
+    />
+  );
 }
 
 export default App;
