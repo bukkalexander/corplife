@@ -1,8 +1,22 @@
-# Social media app for learning
+# Quiz app
 
 
 ## Web
-Change directory into `web`
+
+Fronted part of the app.
+
+### Requirements
+
+You need `npm` to build the web app. 
+You can either:
+- use the `.devcontainer/devcontainer.json` to launch a dev container in VS Code, using the Dev Containers extension
+- manuallly run the `.devcontainer/Dockerfile`
+- install `npm` locally
+
+### Change directory into `web`
+
+All frontend related commands take place inside the folder `web`
+
 ```bash
 cd web
 ```
