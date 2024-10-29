@@ -1,0 +1,63 @@
+name: OpenTofu CI/CD
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  opentofu:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:role/${{ vars.AWS_ROLE }}
+          aws-region: eu-north-1
+
+      - name: Set week number for cache
+        run: echo "WEEK=$(date +'%Y-%U')" >> $GITHUB_ENV
+
+      - name: Cache OpenTofu binary
+        id: opentofu_cache
+        uses: actions/cache@v4
+        with:
+          path: /tmp/tofu
+          key: opentofu-${{ env.WEEK }}
+
+      - name: Install OpenTofu cache miss
+        if: steps.opentofu_cache.outputs.cache-hit != 'true'
+        run: |
+          ./.github/workflowscripts/install_opentofu.sh
+          sudo cp /usr/bin/tofu /tmp/tofu
+        
+      - name: Copy binary from cache if cache hit
+        if: steps.opentofu_cache.outputs.cache-hit == 'true'
+        run: |
+          sudo cp /tmp/tofu /usr/bin/tofu
+
+      - name: OpenTofu Init
+        working-directory: infra/main
+        run: tofu init
+
+      - name: OpenTofu Plan
+        working-directory: infra/main
+        run: |
+          tofu plan -out=tfplan
+
+      - name: OpenTofu Apply
+        if: github.ref == 'refs/heads/main'
+        working-directory: infra/main
+        run: |
+          tofu apply -input=false tfplan
