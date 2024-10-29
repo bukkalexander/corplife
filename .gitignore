@@ -28,3 +28,5 @@ terraform.tfstate
 terraform.tfstate.backup
 .terraform.lock.hcl
 .terraform
+
+infra/modules/quiz/python-libs/**
