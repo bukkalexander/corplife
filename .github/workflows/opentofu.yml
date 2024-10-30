@@ -39,7 +39,7 @@ jobs:
       - name: Install OpenTofu cache miss
         if: steps.opentofu_cache.outputs.cache-hit != 'true'
         run: |
-          ./.github/workflowscripts/install_opentofu.sh
+          make check-tools
           sudo cp /usr/bin/tofu /tmp/tofu
         
       - name: Copy binary from cache if cache hit
@@ -47,21 +47,19 @@ jobs:
         run: |
           sudo cp /tmp/tofu /usr/bin/tofu
 
-      - name: Install requirements.txt
+      - name: Prepare Archives
         run: |
-          pip install -r api/requirements.txt -t infra/modules/quiz/python-libs/ --upgrade
+          make prepare
 
       - name: OpenTofu Init
-        working-directory: infra/main
-        run: tofu init
+        run: make tofu-init
 
       - name: OpenTofu Plan
-        working-directory: infra/main
         run: |
-          tofu plan -out=tfplan
+          make tofu-plan
 
       - name: OpenTofu Apply
         if: github.ref == 'refs/heads/main'
         working-directory: infra/main
         run: |
-          tofu apply -input=false tfplan
+          make tofu-apply
