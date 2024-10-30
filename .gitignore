@@ -30,3 +30,4 @@ terraform.tfstate.backup
 .terraform
 
 infra/modules/quiz/python-libs/**
+infra/modules/quiz/lambda/**

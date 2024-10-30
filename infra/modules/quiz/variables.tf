@@ -29,3 +29,14 @@ variable "function_runtime" {
   default = "python3.12"
 }
 
+variable "lambda_layer_archive_path" {
+  type = string
+  description = "The path to the lambda layer archive relative to module"
+  default = "lambda/python_deps.zip"
+}
+
+variable "lambda_function_archive_path" {
+  type = string
+  description = "The path to the lambda function archive relative to module"
+  default = "lambda/corplife_quiz.zip"
+}

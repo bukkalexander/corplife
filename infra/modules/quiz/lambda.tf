@@ -1,10 +1,3 @@
-# Lambda archive (ZIP file) creation from the source directory
-data "archive_file" "lambda-zip" {
-  type        = "zip"
-  source_dir  = "${path.module}/../../../api"
-  output_path = "${path.module}/lambda/${var.resource_prefix}src.zip"
-}
-
 # Upload the ZIP file to AWS Lambda
 resource "aws_lambda_function" "corplife-quiz-backend" {
   function_name = "${var.resource_prefix}function"
@@ -13,8 +6,8 @@ resource "aws_lambda_function" "corplife-quiz-backend" {
 
   role          = aws_iam_role.lambda-exec-role.arn
 
-  filename      = data.archive_file.lambda-zip.output_path
-  source_code_hash = data.archive_file.lambda-zip.output_base64sha256
+  filename      = "${path.module}/${var.lambda_function_archive_path}"
+  source_code_hash = filebase64sha256("${path.module}/${var.lambda_function_archive_path}")
   package_type = "Zip"
 
   # Attach the Lambda Layer containig all deps
@@ -34,5 +27,5 @@ resource "aws_lambda_function" "corplife-quiz-backend" {
   memory_size      = var.function_memory_size
   timeout          = var.function_timeout
 
-  depends_on = [ aws_lambda_layer_version.python-deps-layer, data.archive_file.lambda-zip, aws_iam_role.lambda-exec-role ]
+  depends_on = [ aws_lambda_layer_version.python-deps-layer, aws_iam_role.lambda-exec-role ]
 }
