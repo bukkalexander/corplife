@@ -52,7 +52,8 @@ jobs:
           make prepare
 
       - name: OpenTofu Init
-        run: make tofu-init
+        run: |
+          make tofu-init
 
       - name: OpenTofu Plan
         run: |
@@ -60,6 +61,5 @@ jobs:
 
       - name: OpenTofu Apply
         if: github.ref == 'refs/heads/main'
-        working-directory: infra/main
         run: |
           make tofu-apply
