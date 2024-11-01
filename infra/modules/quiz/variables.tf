@@ -40,3 +40,9 @@ variable "lambda_function_archive_path" {
   description = "The path to the lambda function archive relative to module"
   default = "lambda/corplife_quiz.zip"
 }
+
+variable "npm_output_dir" {
+  type = string
+  description = "The path to the lambda function archive relative to module"
+  default = "../../../web/dist"
+}
