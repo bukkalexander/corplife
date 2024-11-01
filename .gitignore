@@ -27,3 +27,13 @@ dist-ssr
 # Python
 .venv
 __pycache__
+
+# TF
+terraform.tfstate
+terraform.tfstate.backup
+.terraform.lock.hcl
+.terraform
+
+infra/modules/quiz/python-libs/**
+infra/modules/quiz/lambda/**
+tfplan
