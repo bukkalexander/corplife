@@ -81,17 +81,17 @@ $(ARCHIVES_DIR) $(PIP_TARGET) $(NPM_DEST):
 # Install Python packages to target directory
 .PHONY: install
 install: $(PIP_TARGET)
-	pip install -r $(REQUIREMENTS_FILE) -t $(PIP_TARGET) --upgrade
+	pip install -r $(REQUIREMENTS_FILE) -t $(PIP_TARGET)/python --upgrade
 
 # Create archive for lambda function code
 .PHONY: lambda
 lambda: check-tools $(ARCHIVES_DIR)
-	zip -rj $(LAMBDA_FUNC_DEST) $(LAMBDA_FUNC_SOURCE)
+	cd $(LAMBDA_FUNC_SOURCE) && zip -r $(LAMBDA_FUNC_DEST) .
 
 # Create archive for lambda layer dependencies
 .PHONY: lambda-layer
 lambda-layer: check-tools $(ARCHIVES_DIR)
-	zip -rj $(LAMBDA_LAYER_DEST) $(LAMBDA_LAYER_SOURCE)
+	cd $(LAMBDA_LAYER_SOURCE) && zip -r $(LAMBDA_LAYER_DEST) .
 
 # Re-archive both lambda and lambda-layer targets
 .PHONY: archive
