@@ -86,12 +86,12 @@ install: $(PIP_TARGET)
 # Create archive for lambda function code
 .PHONY: lambda
 lambda: check-tools $(ARCHIVES_DIR)
-	zip -r $(LAMBDA_FUNC_DEST) $(LAMBDA_FUNC_SOURCE)
+	zip -rj $(LAMBDA_FUNC_DEST) $(LAMBDA_FUNC_SOURCE)
 
 # Create archive for lambda layer dependencies
 .PHONY: lambda-layer
 lambda-layer: check-tools $(ARCHIVES_DIR)
-	zip -r $(LAMBDA_LAYER_DEST) $(LAMBDA_LAYER_SOURCE)
+	zip -rj $(LAMBDA_LAYER_DEST) $(LAMBDA_LAYER_SOURCE)
 
 # Re-archive both lambda and lambda-layer targets
 .PHONY: archive
