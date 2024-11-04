@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import QuestionBoard from './QuestionBoard.jsx';
 import ResultBoard from './ResultBoard.jsx';
-// import config from './Config.js';
 
 const CONFIG_URL = "./config.json";
 
@@ -64,7 +63,7 @@ function App() {
   useEffect(() => {
     const loadQuestions = async () => {
       if (!config) return;
-      const fetchedQuestions = await fetchQuestions(config.api_url);
+      const fetchedQuestions = await fetchQuestions(config.apiUrl);
       setQuestions(fetchedQuestions);
       setIsFetchingQuestions(false);
     };
