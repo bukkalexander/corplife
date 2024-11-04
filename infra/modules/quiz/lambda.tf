@@ -1,7 +1,7 @@
 # Upload the ZIP file to AWS Lambda
 resource "aws_lambda_function" "corplife-quiz-backend" {
   function_name = "${var.resource_prefix}function"
-  handler       = "main.lambda_handler"   # file_name.function_name
+  handler       = "lambda.handler"   # file_name.function_name
   runtime       = var.function_runtime
 
   role          = aws_iam_role.lambda-exec-role.arn
