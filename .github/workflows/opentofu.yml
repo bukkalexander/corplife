@@ -50,6 +50,10 @@ jobs:
       - name: Prepare Archives
         run: |
           make prepare
+      
+      - name: Build Frontend
+        run: |
+          make npm-build
 
       - name: OpenTofu Init
         run: |

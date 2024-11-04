@@ -69,6 +69,8 @@ resource "aws_s3_object" "dist_files" {
     split(".", each.value)[length(split(".", each.value)) - 1],  # Get file extension
     "application/octet-stream"  # Default if not matched
   )
+
+  depends_on = [ local_file.config_json ]
 }
 
 resource "local_file" "config_json" {
