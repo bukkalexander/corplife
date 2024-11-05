@@ -113,7 +113,7 @@ You can also debug with VS Code using the following `.vscode/launch.json` config
 }
 ```
 
-### Build for Production
+### Build for production
 
 ```bash
 npm run build
@@ -121,11 +121,38 @@ npm run build
 
 The production build can be found in the `dist` directory.
 
+`web/public/config.json` is used for fetching the `api url`, and is set to localhost by default, but this file is exchanged during deployment to the productin endpoint.
+
 ### Run Unit Tests (React Components)
 
 ```bash
 npm run test
 ```
+## api
+
+Used by the web app for exchanging quiz data.
+
+```bash
+cd api
+```
+
+### Install FastAPI
+
+`FastAPI` is the python API framework for creating APIs, and `Uvicorn` is the server program that hosts the FastAPI application when running locally.
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirments.txt
+```
+
+### Run FastAPI server locally
+
+```bash
+python main.py
+```
+
+In production, `lambda.py` defines the handler for the lambda function. 
 
 ---
 

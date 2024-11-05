@@ -24,6 +24,10 @@ ARCHIVES_DIR := $(BASE_DIR)/infra/modules/quiz/lambda/
 TOFU_DIR := $(BASE_DIR)/infra/main
 PLAN_FILE := $(TOFU_DIR)/tfplan
 
+# NPM (FE) paths
+NPM_SOURCE :=  $(BASE_DIR)/web/
+NPM_DEST := $(BASE_DIR)/web/dist/
+
 
 # ---------------------------------------------------------------------------
 # CHECK REQUIRED TOOLS
@@ -50,6 +54,7 @@ help:
 	@echo "Available targets:"
 	@echo "  prepare       - Full preparation of archives"
 	@echo "  tofu-all      - Full Terraform workflow (init, plan, apply)"
+	@echo "  npm-build     - Full npm install and build"
 	@echo "  install       - Install Python packages in target directory"
 	@echo "  lambda        - Create an archive from source code to upload to lambda"
 	@echo "  lambda-layer  - Create a lambda layer archive from python dependencies"
@@ -58,6 +63,7 @@ help:
 	@echo "  tofu-init     - Run tofu init command"
 	@echo "  tofu-plan     - Run tofu plan command"
 	@echo "  tofu-destroy  - Run tofu destroy command"
+	@echo "  npm-install   - Run npm install command"
 	@echo "  clean         - Clean up build and output directories"
 
 # ---------------------------------------------------------------------------
@@ -65,7 +71,7 @@ help:
 # ---------------------------------------------------------------------------
 
 # Ensure directories are created if they don't exist
-$(ARCHIVES_DIR) $(PIP_TARGET):
+$(ARCHIVES_DIR) $(PIP_TARGET) $(NPM_DEST):
 	mkdir -p $@
 
 # ---------------------------------------------------------------------------
@@ -75,17 +81,17 @@ $(ARCHIVES_DIR) $(PIP_TARGET):
 # Install Python packages to target directory
 .PHONY: install
 install: $(PIP_TARGET)
-	pip install -r $(REQUIREMENTS_FILE) -t $(PIP_TARGET) --upgrade
+	pip install -r $(REQUIREMENTS_FILE) -t $(PIP_TARGET)/python --upgrade
 
 # Create archive for lambda function code
 .PHONY: lambda
 lambda: check-tools $(ARCHIVES_DIR)
-	zip -r $(LAMBDA_FUNC_DEST) $(LAMBDA_FUNC_SOURCE)
+	cd $(LAMBDA_FUNC_SOURCE) && zip -r $(LAMBDA_FUNC_DEST) .
 
 # Create archive for lambda layer dependencies
 .PHONY: lambda-layer
 lambda-layer: check-tools $(ARCHIVES_DIR)
-	zip -r $(LAMBDA_LAYER_DEST) $(LAMBDA_LAYER_SOURCE)
+	cd $(LAMBDA_LAYER_SOURCE) && zip -r $(LAMBDA_LAYER_DEST) .
 
 # Re-archive both lambda and lambda-layer targets
 .PHONY: archive
@@ -142,11 +148,29 @@ tofu-all: tofu-init tofu-plan tofu-apply
 	@echo "Terraform workflow complete: init, plan, and apply done."
 
 # ---------------------------------------------------------------------------
+# NPM TARGETS (FE)
+# ---------------------------------------------------------------------------
+
+# Install frontend dependencies
+.PHONY: npm-install
+npm-install:
+	cd $(NPM_SOURCE) && npm install
+
+# ---------------------------------------------------------------------------
+# HIGH-LEVEL TARGETS FOR NPM
+# ---------------------------------------------------------------------------
+
+# Install and build in one go
+.PHONY: npm-build
+npm-build: npm-install
+	cd $(NPM_SOURCE) && npm run build
+
+# ---------------------------------------------------------------------------
 # CLEANUP
 # ---------------------------------------------------------------------------
 
 # Clean up all build and output directories
 .PHONY: clean
 clean:
-	rm -rf $(PIP_TARGET) $(LAMBDA_FUNC_DEST) $(LAMBDA_LAYER_DEST) $(PLAN_FILE)
+	rm -rf $(PIP_TARGET) $(LAMBDA_FUNC_DEST) $(LAMBDA_LAYER_DEST) $(PLAN_FILE) $(NPM_DEST)
 	@echo "Clean up complete."

@@ -1,25 +1,75 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import QuestionBoard from './QuestionBoard.jsx';
 import ResultBoard from './ResultBoard.jsx';
 
-const questionList = [
-  {
-    text: 'What kind of storage is AWS S3',
-    answers: ['Object storage', 'SQL database', 'Block storage', 'Document database'],
-    correctAnswer: 0,
-  },
-  {
-    text: 'What does EC2 mean',
-    answers: ['Elastic Container Creater', 'Elastic Compute Cloud', 'Ephemeral Code Catalog', 'Error Cloud 2'],
-    correctAnswer: 1,
-  },
-];
+const CONFIG_URL = "./config.json";
+
+const fetchConfig = async (config_url) => {
+  try {
+    console.log("Fetching config...")
+    const response = await fetch(config_url);
+    console.log("Fetching config DONE")
+    if (!response.ok) {
+      throw new Error(`Failed to fetch config: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching config:', error);
+    return null;
+  }
+};
+
+const fetchQuestions = async (api_url) => {
+
+  const fetchQuestionsUrl = `${api_url}/questions` ;
+  console.log(fetchQuestionsUrl)
+  try {
+    console.log("Fetching questions...")
+    const response = await fetch(fetchQuestionsUrl);
+
+    console.log("Fetching questions DONE")
+    if (!response.ok) {
+      throw new Error(`Failed to fetch: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching questions:', error);
+    return [];
+  }
+};
 
 function App() {
+  const [config, setConfig] = useState(null);
+  const [questions, setQuestions] = useState([]);
   const [isQuizCompleted, setIsQuizCompleted] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [score, setScore] = useState(0);
+  const [isFetchingQuestions, setIsFetchingQuestions] = useState(true);
+
+  useEffect(() => {
+    const loadConfig = async () => {
+      const fetchedConfig = await fetchConfig(CONFIG_URL);
+      console.log(fetchedConfig)
+      setConfig(fetchedConfig);
+    };
+    console.log("Loading config...")
+    loadConfig();
+    console.log("Loading config DONE")
+
+  }, []);
+
+
+  useEffect(() => {
+    const loadQuestions = async () => {
+      if (!config) return;
+      const fetchedQuestions = await fetchQuestions(config.apiUrl);
+      setQuestions(fetchedQuestions);
+      setIsFetchingQuestions(false);
+    };
+
+    loadQuestions();
+  }, [config]);
 
   const handleSelectedAnswer = (event) => {
     setSelectedAnswer(Number(event.target.value));
@@ -27,32 +77,47 @@ function App() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(selectedAnswer);
 
-    if (selectedAnswer == questionList[currentQuestionIndex].correctAnswer) {
-      setScore(score + 1);
+    const currentQuestion = questions[currentQuestionIndex];
+    if (selectedAnswer === currentQuestion?.correctAnswer) {
+      setScore((prevScore) => prevScore + 1);
     }
 
-    if (currentQuestionIndex < questionList.length - 1) {
-      if (selectedAnswer == questionList[currentQuestionIndex].correctAnswer) {
-        setScore(score + 1);
-      }
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+      setSelectedAnswer(null);
     } else {
-      setIsQuizCompleted(true)
+      setIsQuizCompleted(true);
     }
   };
 
-  const question = questionList[currentQuestionIndex];
-  const boardHeaderText = `${currentQuestionIndex + 1} / ${questionList.length}`;
+  const handlePlayAgain = () => {
+    setIsQuizCompleted(false);
+    setCurrentQuestionIndex(0);
+    setScore(0);
+    setSelectedAnswer(null);
+  };
+
+  if (isFetchingQuestions) {
+    return <div>Loading quiz...</div>;
+  }
+
+  const currentQuestion = questions[currentQuestionIndex];
+  const boardHeaderText = `${currentQuestionIndex + 1} / ${questions.length}`;
+
   return isQuizCompleted ? (
-    <ResultBoard score={score} totalQuestions={questionList.length} />
+    <ResultBoard
+      score={score}
+      totalQuestions={questions.length}
+      onPlayAgain={handlePlayAgain}
+    />
   ) : (
     <QuestionBoard
       onSubmit={handleSubmit}
-      question={question}
+      question={currentQuestion}
       headerText={boardHeaderText}
       onSelectedAnswer={handleSelectedAnswer}
+      selectedAnswer={selectedAnswer}
     />
   );
 }
