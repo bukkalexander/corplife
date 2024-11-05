@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { Amplify } from 'aws-amplify';
+import { signIn, signOut, currentAuthenticatedUser } from '@aws-amplify/auth';
 import QuestionBoard from './QuestionBoard.jsx';
 import ResultBoard from './ResultBoard.jsx';
+import Login from './Login.jsx';
 
 const CONFIG_URL = "./config.json";
 
@@ -47,6 +50,8 @@ function App() {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [score, setScore] = useState(0);
   const [isFetchingQuestions, setIsFetchingQuestions] = useState(true);
+  const [user, setUser] = useState(null);
+
 
   useEffect(() => {
     const loadConfig = async () => {
@@ -60,6 +65,18 @@ function App() {
 
   }, []);
 
+    // Initialize Amplify after `config` is set
+    useEffect(() => {
+      if (config) {
+        Amplify.configure({
+          Auth: {
+            region: config.region,
+            userPoolId: config.userPoolId,
+            userPoolWebClientId: config.userPoolWebClientId,
+          },
+        });
+      }
+    }, [config]);
 
   useEffect(() => {
     const loadQuestions = async () => {
@@ -71,6 +88,26 @@ function App() {
 
     loadQuestions();
   }, [config]);
+
+  const handleLogin = async (username, password) => {
+    try {
+      const user = await signIn(username, password);
+      setUser(user);
+      console.log("Logged in as:", user);
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      setUser(null);
+      console.log("Logged out");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   const handleSelectedAnswer = (event) => {
     setSelectedAnswer(Number(event.target.value));
@@ -111,6 +148,12 @@ function App() {
 
   const currentQuestion = questions[currentQuestionIndex];
   const boardHeaderText = `${currentQuestionIndex + 1} / ${questions.length}`;
+
+  // Render loading screen while configuration is not yet loaded
+  if (!config) return <div>Loading configuration...</div>;
+
+    // Render login screen if user is not logged in
+  if (!user) return <Login onLogin={handleLogin} />;
 
   return isQuizCompleted ? (
     <ResultBoard
