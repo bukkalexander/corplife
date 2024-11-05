@@ -1,6 +1,6 @@
 """Entrypoint for lambda function in aws."""
-import mangum
+from mangum import Mangum
 from api import app
 
 
-handler = mangum(app)
+handler = Mangum(app)
