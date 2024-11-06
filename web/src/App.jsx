@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Amplify } from 'aws-amplify';
 import { signIn, signUp, signOut, resendSignUpCode, confirmSignUp, getCurrentUser } from '@aws-amplify/auth';
-import ResultBoard from './ResultBoard.jsx';
-import QuestionBoard from './QuestionBoard.jsx';
+
 import Login from './Login.jsx';
 import UserBanner from './UserBanner.jsx';
+import QuestionBoard from './QuestionBoard.jsx';
+import LeaderBoard from './LeaderBoard.jsx';
 
 const CONFIG_URL = "./config.json";
 
-const fetchConfig = async (config_url) => {
+const fetchConfig = async (configUrl) => {
   try {
     console.log("Fetching config...")
-    const response = await fetch(config_url);
+    const response = await fetch(configUrl);
     console.log("Fetching config DONE")
     if (!response.ok) {
       throw new Error(`Failed to fetch config: ${response.statusText}`);
@@ -23,9 +24,9 @@ const fetchConfig = async (config_url) => {
   }
 };
 
-const fetchQuestions = async (api_url) => {
+const fetchQuestions = async (apiUrl) => {
 
-  const fetchQuestionsUrl = `${api_url}/questions` ;
+  const fetchQuestionsUrl = `${apiUrl}/questions` ;
   console.log(fetchQuestionsUrl)
   try {
     console.log("Fetching questions...")
@@ -42,6 +43,44 @@ const fetchQuestions = async (api_url) => {
   }
 };
 
+const postScore = async (apiUrl, scoreData) => {
+  const postScoreUrl = `${apiUrl}/score`;
+  try {
+    console.log("Posting score...");
+    const response = await fetch(postScoreUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(scoreData)
+    });
+    console.log("Posting score DONE");
+    if (!response.ok) {
+      throw new Error(`Failed to post score: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error posting score:', error);
+    return null;
+  }
+};
+
+const fetchScores = async (apiUrl) => {
+  const fetchScoresUrl = `${apiUrl}/scores`;
+  try {
+    console.log("Fetching all scores...");
+    const response = await fetch(fetchScoresUrl);
+    console.log("Fetching all scores DONE");
+    if (!response.ok) {
+      throw new Error(`Failed to fetch scores: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching scores:', error);
+    return [];
+  }
+};
+
 function App() {
   const [config, setConfig] = useState(null);
   const [questions, setQuestions] = useState([]);
@@ -49,6 +88,9 @@ function App() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [score, setScore] = useState(0);
+  const [scoreData, setScoreData] = useState(null);
+  const [scoreDataList, setScoreDataList] = useState([]);
+  
   const [isFetchingQuestions, setIsFetchingQuestions] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [user, setUser] = useState(null);
@@ -208,6 +250,7 @@ function App() {
       setScore((prevScore) => prevScore + 1);
     }
     setIsSubmitted(true)
+
   };
 
   const handleNextQuestion = (event) => {
@@ -218,6 +261,19 @@ function App() {
       setSelectedAnswer(null);
     } else {
       setIsQuizCompleted(true);
+      const scoreData = {
+        id: null,
+        score: score,
+        nbrOfQuestions: questions.length,
+        timestamp: null
+      }
+      const scoreDataResponse = postScore(config.apiUrl, scoreData);
+      setScoreData(scoreDataResponse);
+      fetchScores(config.apiUrl).then(
+        (data) => {
+          setScoreDataList(data);
+        }
+      );
     }
     setIsSubmitted(false)
   };
@@ -229,15 +285,13 @@ function App() {
     setSelectedAnswer(null);
   };
 
-  if (isFetchingQuestions) {
-    return <div>Loading quiz...</div>;
-  }
-
+  
   const currentQuestion = questions[currentQuestionIndex];
   const boardHeaderText = `${currentQuestionIndex + 1} / ${questions.length}`;
-
+  
   // Render loading screen while configuration is not yet loaded
   if (!config) return <div>Loading configuration...</div>;
+  if (isFetchingQuestions) return <div>Loading quiz...</div>;
 
   // Render login screen if user is not logged in
   if (!user) {
@@ -258,12 +312,12 @@ function App() {
       {user && <UserBanner username={user} onLogout={handleLogout} />}
   
       {isQuizCompleted ? (
-        <ResultBoard
-          score={score}
-          totalQuestions={questions.length}
+        <LeaderBoard
+          scoreData={scoreData}
+          scoreDataList={scoreDataList}
           onPlayAgain={handlePlayAgain}
         />
-      ) : ( 
+      ) : (
         <QuestionBoard
           onSubmit={handleSubmit}
           onNextQuestion={handleNextQuestion}
