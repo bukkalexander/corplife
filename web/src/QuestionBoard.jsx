@@ -1,6 +1,6 @@
 import React from 'react';
 
-function QuestionBoard({ onSubmit, question, headerText, onSelectedAnswer, selectedAnswer }) {
+function QuestionBoard({ onSubmit, onNextQuestion, isSubmitted, question, headerText, onSelectedAnswer, selectedAnswer }) {
   return (
     <div id="questionApp">
       <div id="questionHeader">
@@ -18,12 +18,26 @@ function QuestionBoard({ onSubmit, question, headerText, onSelectedAnswer, selec
               name="radioAnswer"
               id={`q${index}`}
               checked={selectedAnswer === index}
+              disabled={isSubmitted}
             />
-            <label htmlFor={`q${index}`}> {answer}</label>
+            <label 
+              htmlFor={`q${index}`}
+              style={{
+                color: isSubmitted && index === question.correctAnswer ? 'green' : 
+                      isSubmitted && index === selectedAnswer && index !== question.correctAnswer ? 'red' : 'black'
+              }}
+            >
+              {answer}
+            </label>
             <br />
           </React.Fragment>
         ))}
-        <button type="submit" disabled={selectedAnswer === null}>Submit</button>
+        {
+          isSubmitted ?
+          <button type="button" onClick={onNextQuestion}>Next</button>
+          :
+          <button type="submit" disabled={selectedAnswer === null}>Submit</button>
+        }
       </form>
     </div>
   );

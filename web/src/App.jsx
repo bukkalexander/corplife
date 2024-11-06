@@ -41,6 +41,7 @@ const fetchQuestions = async (api_url) => {
 function App() {
   const [config, setConfig] = useState(null);
   const [questions, setQuestions] = useState([]);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [isQuizCompleted, setIsQuizCompleted] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -82,6 +83,11 @@ function App() {
     if (selectedAnswer === currentQuestion?.correctAnswer) {
       setScore((prevScore) => prevScore + 1);
     }
+    setIsSubmitted(true)
+  };
+
+  const handleNextQuestion = (event) => {
+    event.preventDefault();
 
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
@@ -89,6 +95,7 @@ function App() {
     } else {
       setIsQuizCompleted(true);
     }
+    setIsSubmitted(false)
   };
 
   const handlePlayAgain = () => {
@@ -114,6 +121,8 @@ function App() {
   ) : (
     <QuestionBoard
       onSubmit={handleSubmit}
+      onNextQuestion={handleNextQuestion}
+      isSubmitted={isSubmitted}
       question={currentQuestion}
       headerText={boardHeaderText}
       onSelectedAnswer={handleSelectedAnswer}
