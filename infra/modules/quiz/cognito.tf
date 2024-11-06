@@ -40,7 +40,11 @@ resource "aws_cognito_user_pool_client" "user_pool_client" {
   generate_secret              = false
   prevent_user_existence_errors = "ENABLED"
 
-  explicit_auth_flows = ["ALLOW_USER_PASSWORD_AUTH", "ALLOW_REFRESH_TOKEN_AUTH"]
+  explicit_auth_flows = [
+    "ALLOW_USER_PASSWORD_AUTH",
+    "ALLOW_REFRESH_TOKEN_AUTH",
+    "ALLOW_USER_SRP_AUTH"
+  ]
 
   # Token expiration times (optional)
   access_token_validity  = 1      # hours
