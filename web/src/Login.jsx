@@ -11,9 +11,9 @@ function Login({ onLogin, onSignUp, onVerify, onResend }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (isVerifying) {
-      onVerify(username, verificationCode); // Verify the code
+      onVerify(username, verificationCode);
     } else if (isSignUp) {
-      onSignUp(username, password, email).then(() => setIsVerifying(true)); // Initiate sign-up and switch to verification
+      onSignUp(username, password, email).then(() => setIsVerifying(true));
     } else {
       onLogin(username, password);
     }
@@ -32,8 +32,8 @@ function Login({ onLogin, onSignUp, onVerify, onResend }) {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
+          className="form-input"
         />
-        <br />
 
         {isSignUp && !isVerifying && (
           <>
@@ -44,8 +44,8 @@ function Login({ onLogin, onSignUp, onVerify, onResend }) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              className="form-input"
             />
-            <br />
           </>
         )}
 
@@ -58,8 +58,8 @@ function Login({ onLogin, onSignUp, onVerify, onResend }) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              className="form-input"
             />
-            <br />
           </>
         )}
 
@@ -72,23 +72,25 @@ function Login({ onLogin, onSignUp, onVerify, onResend }) {
               value={verificationCode}
               onChange={(e) => setVerificationCode(e.target.value)}
               required
+              className="form-input"
             />
-            <button type="button" onClick={() => onVerify(username, verificationCode)}>
-              Verify
-            </button>
-            <button type="button" onClick={() => onResend(username)}>
-              Resend Code
-            </button>
-            <br />
+            <div className="verification-buttons">
+              <button type="button" onClick={() => onVerify(username, verificationCode)}>
+                Verify
+              </button>
+              <button type="button" onClick={() => onResend(username)}>
+                Resend Code
+              </button>
+            </div>
           </>
         )}
 
-        <button type="submit">
+        <button type="submit" className="primary-button">
           {isVerifying ? "Submit Code" : isSignUp ? "Sign Up" : "Login"}
         </button>
 
         {!isVerifying && (
-          <button type="button" onClick={() => setIsSignUp(!isSignUp)}>
+          <button type="button" onClick={() => setIsSignUp(!isSignUp)} className="secondary-button">
             {isSignUp ? "Already have an account? Login" : "New user? Sign Up"}
           </button>
         )}

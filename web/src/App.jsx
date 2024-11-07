@@ -4,6 +4,7 @@ import { signIn, signUp, signOut, resendSignUpCode, confirmSignUp, getCurrentUse
 import ResultBoard from './ResultBoard.jsx';
 import QuestionBoard from './QuestionBoard.jsx';
 import Login from './Login.jsx';
+import UserBanner from './UserBanner.jsx';
 
 const CONFIG_URL = "./config.json";
 
@@ -50,6 +51,7 @@ function App() {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [score, setScore] = useState(0);
   const [isFetchingQuestions, setIsFetchingQuestions] = useState(true);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [user, setUser] = useState(null);
   const [cognitoConfigured, setCognitoConfigured] = useState(false);
 
@@ -110,7 +112,6 @@ function App() {
         try {
           const { username } = await getCurrentUser();
           console.log("User already present: ", username)
-          // Here we capture the username but setUser when login doesn't see the TODO
           setUser(username);
         } catch (error) {
           console.error("Could not find existing user:", error);
@@ -136,10 +137,8 @@ function App() {
   const handleLogin = async (username, password) => {
     try {
       const user = await signIn({ username, password });
-      // TODO: Make user object actually hold user data like username
-      // Currently it stores next steps.
-      setUser(user); 
-      console.log("Logged in as:", user);
+      setUser(username); 
+      console.log("Logged in as:", username);
     } catch (error) {
       console.error("Login failed:", error);
     }
@@ -248,23 +247,30 @@ function App() {
       />
     );
   }
+
+  return (
+    <div id="appContainer">
+      {/* Display UserBanner if the user is logged in */}
+      {user && <UserBanner username={user} onLogout={handleLogout} />}
   
-  return isQuizCompleted ? (
-    <ResultBoard
-      score={score}
-      totalQuestions={questions.length}
-      onPlayAgain={handlePlayAgain}
-    />
-  ) : (
-    <QuestionBoard
-      onSubmit={handleSubmit}
-      onNextQuestion={handleNextQuestion}
-      isSubmitted={isSubmitted}
-      question={currentQuestion}
-      headerText={boardHeaderText}
-      onSelectedAnswer={handleSelectedAnswer}
-      selectedAnswer={selectedAnswer}
-    />
+      {isQuizCompleted ? (
+        <ResultBoard
+          score={score}
+          totalQuestions={questions.length}
+          onPlayAgain={handlePlayAgain}
+        />
+      ) : ( 
+        <QuestionBoard
+          onSubmit={handleSubmit}
+          onNextQuestion={handleNextQuestion}
+          isSubmitted={isSubmitted}
+          question={currentQuestion}
+          headerText={boardHeaderText}
+          onSelectedAnswer={handleSelectedAnswer}
+          selectedAnswer={selectedAnswer}
+        />
+      )}
+    </div>
   );
 }
 

@@ -6,12 +6,17 @@ function ResultBoard({ score, totalQuestions, onPlayAgain }) {
     score === totalQuestions
       ? 'Congratulations, you got a perfect score!'
       : 'Great job, keep practicing!';
+
   return (
-    <div id="resultBoard">
-      <h1>Quiz Completed!</h1>
+    <div id="questionApp"> {/* Reuse #questionApp styles for consistency */}
+      <div id="resultBoardHeader">
+        <h1>Quiz Completed!</h1>
+      </div>
       <p>Your Score: {scoreSummary}</p>
       <p>{message}</p>
-      <button onClick={onPlayAgain}>Play Again</button>
+      <button onClick={onPlayAgain} className="primary-button">
+        Play Again
+      </button>
     </div>
   );
 }
