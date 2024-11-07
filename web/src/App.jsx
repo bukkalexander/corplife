@@ -45,7 +45,6 @@ const fetchQuestions = async (api_url) => {
 function App() {
   const [config, setConfig] = useState(null);
   const [questions, setQuestions] = useState([]);
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [isQuizCompleted, setIsQuizCompleted] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
