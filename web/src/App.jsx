@@ -267,16 +267,24 @@ function App() {
         nbrOfQuestions: questions.length,
         timestamp: null
       }
-      const scoreDataResponse = postScore(config.apiUrl, scoreData);
-      setScoreData(scoreDataResponse);
+      postScore(config.apiUrl, scoreData).then(
+        (scoreDataResponse) => {
+          setScoreData(scoreDataResponse);
+        }
+      );
+    }
+    setIsSubmitted(false)
+  };
+
+  useEffect(() => {
+    if (isQuizCompleted && scoreData && config) {
       fetchScores(config.apiUrl).then(
         (data) => {
           setScoreDataList(data);
         }
       );
     }
-    setIsSubmitted(false)
-  };
+  }, [isQuizCompleted, scoreData, config]);
 
   const handlePlayAgain = () => {
     setIsQuizCompleted(false);
