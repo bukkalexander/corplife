@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function Login({ onLogin, onSignUp, onVerify, onResend }) {
+function Login({ onLogin, onSignUp, onVerify, onResend, onGuestLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -94,6 +94,12 @@ function Login({ onLogin, onSignUp, onVerify, onResend }) {
             {isSignUp ? "Already have an account? Login" : "New user? Sign Up"}
           </button>
         )}
+
+        <div className="guest-access">
+          <a href="#continue-as-guest" onClick={(e) => { e.preventDefault(); onGuestLogin(); }} className="guest-link">
+            Continue as Guest
+          </a>
+        </div>
       </form>
     </div>
   );

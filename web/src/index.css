@@ -130,3 +130,20 @@
     font-weight: 500;
     color: #555;
 }
+
+/* login.css */
+.guest-access {
+    margin-top: 1em;
+    text-align: center;
+  }
+  
+  .guest-link {
+    color: #007bff; /* Bootstrap blue */
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
+  .guest-link:hover {
+    color: #0056b3; /* Darker blue on hover */
+  }
+  

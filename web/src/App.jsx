@@ -191,6 +191,10 @@ function App() {
       console.error("Logout failed:", error);
     }
   };
+   
+  const handleGuestLogin = () => {
+    setUser("Guest"); // Set an arbitrary guest username
+  };
 
   const handleSelectedAnswer = (event) => {
     setSelectedAnswer(Number(event.target.value));
@@ -243,6 +247,7 @@ function App() {
         onSignUp={handleSignUp}
         onVerify={handleVerify}
         onResend={handleResendCode}
+        onGuestLogin={handleGuestLogin}
       />
     );
   }
