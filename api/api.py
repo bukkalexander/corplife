@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 
 
-from data import QUESTIONS
+from data import QUESTIONS_0 as QUESTIONS
 from question import Question
 from score_data import ScoreData
 
