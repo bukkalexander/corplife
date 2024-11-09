@@ -1,19 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { Amplify } from 'aws-amplify';
-import { signIn, signUp, signOut, resendSignUpCode, confirmSignUp, getCurrentUser } from '@aws-amplify/auth';
+import {
+  signIn,
+  signUp,
+  signOut,
+  resendSignUpCode,
+  confirmSignUp,
+  getCurrentUser,
+} from '@aws-amplify/auth';
 
 import Login from './Login.jsx';
 import UserBanner from './UserBanner.jsx';
 import QuestionBoard from './QuestionBoard.jsx';
 import LeaderBoard from './LeaderBoard.jsx';
 
-const CONFIG_URL = "./config.json";
+const CONFIG_URL = './config.json';
 
 const fetchConfig = async (configUrl) => {
   try {
-    console.log("Fetching config...")
+    console.log('Fetching config...');
     const response = await fetch(configUrl);
-    console.log("Fetching config DONE")
+    console.log('Fetching config DONE');
     if (!response.ok) {
       throw new Error(`Failed to fetch config: ${response.statusText}`);
     }
@@ -25,14 +32,13 @@ const fetchConfig = async (configUrl) => {
 };
 
 const fetchQuestions = async (apiUrl) => {
-
-  const fetchQuestionsUrl = `${apiUrl}/questions` ;
-  console.log(fetchQuestionsUrl)
+  const fetchQuestionsUrl = `${apiUrl}/questions`;
+  console.log(fetchQuestionsUrl);
   try {
-    console.log("Fetching questions...")
+    console.log('Fetching questions...');
     const response = await fetch(fetchQuestionsUrl);
 
-    console.log("Fetching questions DONE")
+    console.log('Fetching questions DONE');
     if (!response.ok) {
       throw new Error(`Failed to fetch: ${response.statusText}`);
     }
@@ -46,15 +52,15 @@ const fetchQuestions = async (apiUrl) => {
 const postScore = async (apiUrl, scoreData) => {
   const postScoreUrl = `${apiUrl}/score`;
   try {
-    console.log("Posting score...");
+    console.log('Posting score...');
     const response = await fetch(postScoreUrl, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(scoreData)
+      body: JSON.stringify(scoreData),
     });
-    console.log("Posting score DONE");
+    console.log('Posting score DONE');
     if (!response.ok) {
       throw new Error(`Failed to post score: ${response.statusText}`);
     }
@@ -68,9 +74,9 @@ const postScore = async (apiUrl, scoreData) => {
 const fetchScores = async (apiUrl) => {
   const fetchScoresUrl = `${apiUrl}/scores`;
   try {
-    console.log("Fetching all scores...");
+    console.log('Fetching all scores...');
     const response = await fetch(fetchScoresUrl);
-    console.log("Fetching all scores DONE");
+    console.log('Fetching all scores DONE');
     if (!response.ok) {
       throw new Error(`Failed to fetch scores: ${response.statusText}`);
     }
@@ -90,38 +96,36 @@ function App() {
   const [score, setScore] = useState(0);
   const [scoreData, setScoreData] = useState(null);
   const [scoreDataList, setScoreDataList] = useState([]);
-  
+
   const [isFetchingQuestions, setIsFetchingQuestions] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [user, setUser] = useState(null);
   const [cognitoConfigured, setCognitoConfigured] = useState(false);
 
-
   useEffect(() => {
     const loadConfig = async () => {
       const fetchedConfig = await fetchConfig(CONFIG_URL);
-      console.log(fetchedConfig)
+      console.log(fetchedConfig);
       setConfig(fetchedConfig);
     };
-    console.log("Loading config...")
+    console.log('Loading config...');
     loadConfig();
-    console.log("Loading config DONE")
-
+    console.log('Loading config DONE');
   }, []);
 
   // Initialize Amplify after `config` is set
   useEffect(() => {
-      if (config) {
-        Amplify.configure({
-          Auth: {
-            Cognito: {
-              userPoolId: config.userPoolId,
-              userPoolClientId: config.userPoolWebClientId,
-              allowGuestAccess: true,
-              //OPTIONAL - This is used when autoSignIn is enabled for Auth.signUp
-              // 'code' is used for Auth.confirmSignUp, 'link' is used for email link verification
-              //signUpVerificationMethod: 'code', // 'code' | 'link'
-              /*
+    if (config) {
+      Amplify.configure({
+        Auth: {
+          Cognito: {
+            userPoolId: config.userPoolId,
+            userPoolClientId: config.userPoolWebClientId,
+            allowGuestAccess: true,
+            //OPTIONAL - This is used when autoSignIn is enabled for Auth.signUp
+            // 'code' is used for Auth.confirmSignUp, 'link' is used for email link verification
+            //signUpVerificationMethod: 'code', // 'code' | 'link'
+            /*
               loginWith: {
                 // OPTIONAL - Hosted UI configuration
                 oauth: {
@@ -139,12 +143,12 @@ function App() {
                 }
               }
               */
-            }
-          }
-        });
-        setCognitoConfigured(true);
-      }
-    }, [config]);
+          },
+        },
+      });
+      setCognitoConfigured(true);
+    }
+  }, [config]);
 
   // Check if a user is already signed in
   useEffect(() => {
@@ -152,10 +156,10 @@ function App() {
       const checkUser = async () => {
         try {
           const { username } = await getCurrentUser();
-          console.log("User already present: ", username)
+          console.log('User already present: ', username);
           setUser(username);
         } catch (error) {
-          console.error("Could not find existing user:", error);
+          console.error('Could not find existing user:', error);
           setUser(null); // No user is signed in
         }
       };
@@ -178,10 +182,10 @@ function App() {
   const handleLogin = async (username, password) => {
     try {
       const user = await signIn({ username, password });
-      setUser(username); 
-      console.log("Logged in as:", username);
+      setUser(username);
+      console.log('Logged in as:', username);
     } catch (error) {
-      console.error("Login failed:", error);
+      console.error('Login failed:', error);
     }
   };
 
@@ -195,32 +199,32 @@ function App() {
           userAttributes: {
             email,
           },
-          autoSignIn: true
-        }
+          autoSignIn: true,
+        },
       });
-      
-      console.log("Sign-up successful:", user);
+
+      console.log('Sign-up successful:', user);
     } catch (error) {
-      console.error("Sign-up failed:", error);
+      console.error('Sign-up failed:', error);
     }
   };
 
   const handleResendCode = async (username) => {
     try {
       await resendSignUpCode({ username });
-      console.log("Verification code resent");
+      console.log('Verification code resent');
     } catch (error) {
-      console.error("Resend code failed:", error);
+      console.error('Resend code failed:', error);
     }
   };
 
   const handleVerify = async (username, confirmationCode) => {
     try {
       await confirmSignUp({ username, confirmationCode });
-      console.log("Verification successful");
+      console.log('Verification successful');
       // Optionally auto-login or redirect after verification
     } catch (error) {
-      console.error("Verification failed:", error);
+      console.error('Verification failed:', error);
     }
   };
 
@@ -228,14 +232,14 @@ function App() {
     try {
       await signOut();
       setUser(null);
-      console.log("Logged out");
+      console.log('Logged out');
     } catch (error) {
-      console.error("Logout failed:", error);
+      console.error('Logout failed:', error);
     }
   };
-   
+
   const handleGuestLogin = () => {
-    setUser("Guest"); // Set an arbitrary guest username
+    setUser('Guest'); // Set an arbitrary guest username
   };
 
   const handleSelectedAnswer = (event) => {
@@ -249,8 +253,7 @@ function App() {
     if (selectedAnswer === currentQuestion?.correctAnswer) {
       setScore((prevScore) => prevScore + 1);
     }
-    setIsSubmitted(true)
-
+    setIsSubmitted(true);
   };
 
   const handleNextQuestion = (event) => {
@@ -265,24 +268,20 @@ function App() {
         id: null,
         score: score,
         nbrOfQuestions: questions.length,
-        timestamp: null
-      }
-      postScore(config.apiUrl, scoreData).then(
-        (scoreDataResponse) => {
-          setScoreData(scoreDataResponse);
-        }
-      );
+        timestamp: null,
+      };
+      postScore(config.apiUrl, scoreData).then((scoreDataResponse) => {
+        setScoreData(scoreDataResponse);
+      });
     }
-    setIsSubmitted(false)
+    setIsSubmitted(false);
   };
 
   useEffect(() => {
     if (isQuizCompleted && scoreData && config) {
-      fetchScores(config.apiUrl).then(
-        (data) => {
-          setScoreDataList(data);
-        }
-      );
+      fetchScores(config.apiUrl).then((data) => {
+        setScoreDataList(data);
+      });
     }
   }, [isQuizCompleted, scoreData, config]);
 
@@ -293,10 +292,9 @@ function App() {
     setSelectedAnswer(null);
   };
 
-  
   const currentQuestion = questions[currentQuestionIndex];
   const boardHeaderText = `${currentQuestionIndex + 1} / ${questions.length}`;
-  
+
   // Render loading screen while configuration is not yet loaded
   if (!config) return <div>Loading configuration...</div>;
   if (isFetchingQuestions) return <div>Loading quiz...</div>;
@@ -315,10 +313,10 @@ function App() {
   }
 
   return (
-    <div id="appContainer">
+    <>
       {/* Display UserBanner if the user is logged in */}
       {user && <UserBanner username={user} onLogout={handleLogout} />}
-  
+
       {isQuizCompleted ? (
         <LeaderBoard
           scoreData={scoreData}
@@ -336,7 +334,7 @@ function App() {
           selectedAnswer={selectedAnswer}
         />
       )}
-    </div>
+    </>
   );
 }
 

@@ -1,3 +1,6 @@
+/* reset */
+* { margin: 0; padding: 0; }
+
 /* Root Container - Center Content */
 #root {
     display: flex;
@@ -9,7 +12,7 @@
 }
 
 /* Main App Container */
-#questionApp, #loginApp, #resultBoard {
+.container-card {
     background-color: white;
     padding: 20px;
     border-radius: 10px;
@@ -20,14 +23,21 @@
 }
 
 /* Header Styling */
-#questionHeader h1, #loginHeader h1, #resultBoardHeader h1 {
+.header-text {
     margin-bottom: 15px;
     font-size: 1.5rem;
     color: #333;
 }
 
+/* Header Styling */
+.header-text-black {
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+    color: #000;
+}
+
 /* Form Styling for Labels and Text */
-#questionForm h1, #loginForm label, #questionForm p {
+#loginForm label{
     margin-bottom: 10px;
     font-size: 1rem;
     color: #555;
