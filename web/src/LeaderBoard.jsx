@@ -1,15 +1,15 @@
 import React from 'react';
+import { format } from 'date-fns';
 import './LeaderBoard.css';
 
 function LeaderBoard({ scoreData, scoreDataList, onPlayAgain }) {
   return (
-    <div className="leaderboard-container">
+    <div className="quizBoard">
       <h1>LeaderBoard</h1>
       <table className="leaderboard-table">
         <thead>
           <tr>
             <th>Score</th>
-            <th>Number of Questions</th>
             <th>Timestamp</th>
           </tr>
         </thead>
@@ -19,14 +19,13 @@ function LeaderBoard({ scoreData, scoreDataList, onPlayAgain }) {
               key={data.id}
               className={data.id === scoreData.id ? 'highlight' : ''}
             >
-              <td>{data.score}</td>
-              <td>{data.nbrOfQuestions}</td>
-              <td>{data.timestamp}</td>
+              <td>{data.score} / {data.nbrOfQuestions}</td>
+              <td>{format(new Date(data.timestamp), 'yyyy-MM-dd HH:mm')}</td>
             </tr>
           ))}
         </tbody>
       </table>
-      <button className="play-again-button" onClick={onPlayAgain}>Play Again</button>
+      <button onClick={onPlayAgain}>Play Again</button>
     </div>
   );
 }

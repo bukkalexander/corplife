@@ -1,4 +1,4 @@
-.leaderboard-container {
+/* .leaderboard-container {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
@@ -6,7 +6,7 @@
   background-color: #f9f9f9;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
+} */
 
 .leaderboard-table {
   width: 100%;
@@ -17,12 +17,12 @@
 .leaderboard-table th,
 .leaderboard-table td {
   padding: 10px;
-  border: 1px solid #ddd;
+  /* border: 1px solid #ddd; */
   text-align: center;
 }
 
 .leaderboard-table th {
-  background-color: #4caf50;
+  background-color: #007bff;
   color: white;
 }
 
@@ -31,20 +31,6 @@
 }
 
 .leaderboard-table tr.highlight {
-  background-color: #d3f9d8;
-  border: 2px solid #4caf50;
-}
-
-.play-again-button {
-  padding: 10px 20px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.play-again-button:hover {
-  background-color: #45a049;
+  background-color: #88acd3;
+  border: 2px solid #007bff;
 }

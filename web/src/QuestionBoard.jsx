@@ -2,7 +2,7 @@ import React from 'react';
 
 function QuestionBoard({ onSubmit, onNextQuestion, isSubmitted, question, headerText, onSelectedAnswer, selectedAnswer }) {
   return (
-    <div id="questionApp">
+    <div className="quizBoard">
       <div id="questionHeader">
         <h1>Quiz</h1>
       </div>

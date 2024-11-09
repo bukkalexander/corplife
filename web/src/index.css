@@ -17,7 +17,7 @@
 }
 
 /* Center #questionApp and make it tight around its content */
-#questionApp {
+.quizBoard {
     background-color: white;  /* Background color for the form container */
     padding: 20px;            /* Padding around the content */
     border-radius: 10px;      /* Optional: Rounded corners */
