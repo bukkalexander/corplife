@@ -1840,3 +1840,1198 @@ QUESTIONS_11 = [
         # "category": "storage and databases"
     }
 ]
+
+QUESTIONS_12 = [
+    {
+        "text": "How does Amazon Aurora maintain high availability and durability for data?",
+        "answers": [
+            "By replicating six copies of data across three Availability Zones and continuously backing up to Amazon S3",
+            "By automatically creating read replicas in different regions",
+            "By creating a single backup in one Availability Zone",
+            "By using an on-premises backup solution"
+        ],
+        "correctAnswer": 0,
+        # "category": "storage and databases"
+    },
+    {
+        "text": "What level of automatic backup does Amazon RDS provide?",
+        "answers": [
+            "RDS does not offer automatic backups",
+            "RDS provides automatic backups of databases without user intervention",
+            "Backups are only available with manual setup",
+            "Backups require additional configuration using Amazon S3"
+        ],
+        "correctAnswer": 1,
+        # "category": "storage and databases"
+    },
+    {
+        "text": "Which service offers 1 million requests per month and 3.2 million seconds of compute time under the AWS Free Tier?",
+        "answers": [
+            "Amazon EC2",
+            "AWS Lambda",
+            "Amazon S3",
+            "Amazon RDS"
+        ],
+        "correctAnswer": 1,
+        # "category": "pricing and support"
+    },
+    {
+        "text": "What is the storage limit for DynamoDB under the AWS Free Tier?",
+        "answers": [
+            "10 GB per month",
+            "25 GB per month",
+            "50 GB per month",
+            "Unlimited storage"
+        ],
+        "correctAnswer": 1,
+        # "category": "pricing and support"
+    },
+    {
+        "text": "Which AWS Cloud Adoption Framework (CAF) perspective focuses on training, role definition, and building a cloud culture?",
+        "answers": [
+            "Business",
+            "People",
+            "Governance",
+            "Operations"
+        ],
+        "correctAnswer": 1,
+        # "category": "migration and innovation"
+    },
+    {
+        "text": "What does the Platform perspective in the AWS Cloud Adoption Framework (CAF) focus on?",
+        "answers": [
+            "Cloud infrastructure, architecture, core services, and scalability",
+            "User access policies and IAM",
+            "Developing cloud financial models",
+            "Building cloud-ready teams"
+        ],
+        "correctAnswer": 0,
+        # "category": "migration and innovation"
+    },
+    {
+        "text": "Which pillar of the Well-Architected Framework is focused on protecting data and systems?",
+        "answers": [
+            "Cost Optimization",
+            "Performance Efficiency",
+            "Operational Excellence",
+            "Security"
+        ],
+        "correctAnswer": 3,
+        # "category": "security"
+    },
+    {
+        "text": "What storage capacity does the AWS Snowcone device offer?",
+        "answers": [
+            "100 PB",
+            "80 TB",
+            "14 TB",
+            "1 TB"
+        ],
+        "correctAnswer": 2,
+        # "category": "migration and innovation"
+    },
+    {
+        "text": "How much data can an AWS Snowmobile store?",
+        "answers": [
+            "1 TB",
+            "14 TB",
+            "80 TB",
+            "100 PB"
+        ],
+        "correctAnswer": 3,
+        # "category": "migration and innovation"
+    },
+    {
+        "text": "Which AWS Support Plan offers 24-hour email access for non-critical issues with a 12-hour response time for system impairments?",
+        "answers": [
+            "Basic",
+            "Developer",
+            "Business",
+            "Enterprise On-Ramp"
+        ],
+        "correctAnswer": 1,
+        # "category": "pricing and support"
+    },
+    {
+        "text": "What level of support is available under the AWS Basic Support plan?",
+        "answers": [
+            "24/7 technical support with a 1-hour response time",
+            "Access to whitepapers, documentation, and Trusted Advisor's basic features",
+            "24-hour email access to AWS engineers",
+            "Access to a designated Technical Account Manager"
+        ],
+        "correctAnswer": 1,
+        # "category": "pricing and support"
+    },
+    {
+        "text": "Which AWS support plan provides a response time of 15 minutes for business-critical issues?",
+        "answers": [
+            "Developer",
+            "Business",
+            "Enterprise On-Ramp",
+            "Enterprise"
+        ],
+        "correctAnswer": 3,
+        # "category": "pricing and support"
+    },
+    {
+        "text": "Which S3 storage class provides the fastest retrieval times, similar to Standard storage?",
+        "answers": [
+            "Glacier Deep Archive",
+            "Glacier Flexible Retrieval",
+            "Glacier Instant Retrieval",
+            "S3 Standard-IA"
+        ],
+        "correctAnswer": 2,
+        # "category": "storage and databases"
+    },
+    {
+        "text": "What is the expected retrieval time for data in the Glacier Deep Archive storage class?",
+        "answers": [
+            "Milliseconds",
+            "1-2 minutes",
+            "3-5 hours",
+            "12-48 hours"
+        ],
+        "correctAnswer": 3,
+        # "category": "storage and databases"
+    },
+    {
+        "text": "How much can you save on EC2 costs by using Spot Instances compared to On-Demand Instances?",
+        "answers": [
+            "Up to 50%",
+            "Up to 60%",
+            "Up to 70%",
+            "Up to 90%"
+        ],
+        "correctAnswer": 3,
+        # "category": "pricing and support"
+    },
+    {
+        "text": "What is the cost of data transfers within the same region between AWS services, such as S3?",
+        "answers": [
+            "Free for both data ingress and egress",
+            "Free for data ingress but charged for egress",
+            "Free for data ingress only",
+            "Free for egress only"
+        ],
+        "correctAnswer": 0,
+        # "category": "pricing and support"
+    },
+    {
+        "text": "Which AWS service replicates data automatically across multiple Availability Zones to ensure durability?",
+        "answers": [
+            "Amazon DynamoDB",
+            "Amazon S3",
+            "Amazon Redshift",
+            "Amazon EC2"
+        ],
+        "correctAnswer": 1,
+        # "category": "storage and databases"
+    },
+    {
+        "text": "What AWS support plan offers access to a pool of Technical Account Managers and a 30-minute response time for business-critical issues?",
+        "answers": [
+            "Developer",
+            "Business",
+            "Enterprise On-Ramp",
+            "Enterprise"
+        ],
+        "correctAnswer": 2,
+        # "category": "pricing and support"
+    },
+    {
+        "text": "What service provides continuous backup and replication of data across multiple Availability Zones within a region?",
+        "answers": [
+            "Amazon EBS",
+            "Amazon S3",
+            "Amazon DynamoDB",
+            "Amazon Redshift"
+        ],
+        "correctAnswer": 1,
+        # "category": "storage and databases"
+    },
+    {
+        "text": "Which AWS service offers up to 25 GB of storage per month under the AWS Free Tier?",
+        "answers": [
+            "Amazon RDS",
+            "Amazon EFS",
+            "Amazon DynamoDB",
+            "Amazon EC2"
+        ],
+        "correctAnswer": 2,
+        # "category": "pricing and support"
+    }
+]
+
+QUESTIONS_13 = [
+    {
+        "text": "What does the AWS Business Support Plan include in terms of response time for impaired production systems?",
+        "answers": [
+            "15 minutes for business-critical issues",
+            "4 hours for impaired production systems and 1 hour for down production systems",
+            "24 hours for any production system issue",
+            "Immediate access to a Technical Account Manager"
+        ],
+        "correctAnswer": 1,
+        # "category": "pricing and support"
+    },
+    {
+        "text": "Which AWS Free Tier option is available only for the first 12 months of usage?",
+        "answers": [
+            "Amazon DynamoDB storage",
+            "AWS Lambda requests",
+            "S3 Standard Storage",
+            "CloudFront data transfer out"
+        ],
+        "correctAnswer": 2,
+        # "category": "pricing and support"
+    },
+    {
+        "text": "What is the primary focus of the Governance perspective within the AWS Cloud Adoption Framework (CAF)?",
+        "answers": [
+            "Ensuring business objectives align with cloud strategy",
+            "Policies, compliance, access management, and monitoring",
+            "Optimizing financials for cloud migration",
+            "Defining roles and managing change"
+        ],
+        "correctAnswer": 1,
+        # "category": "migration and innovation"
+    },
+    {
+        "text": "Which perspective in the AWS Cloud Adoption Framework (CAF) focuses on risk management and compliance?",
+        "answers": [
+            "Security",
+            "Operations",
+            "Platform",
+            "Governance"
+        ],
+        "correctAnswer": 3,
+        # "category": "migration and innovation"
+    },
+    {
+        "text": "What AWS Well-Architected pillar is concerned with minimizing operational costs and improving resource utilization?",
+        "answers": [
+            "Security",
+            "Cost Optimization",
+            "Operational Excellence",
+            "Sustainability"
+        ],
+        "correctAnswer": 1,
+        # "category": "security"
+    },
+    {
+        "text": "Which AWS service allows data retrieval from 1 minute to 12 hours and is less expensive than Glacier Instant Retrieval?",
+        "answers": [
+            "S3 Standard",
+            "S3 Glacier Flexible Retrieval",
+            "S3 Intelligent-Tiering",
+            "S3 Glacier Deep Archive"
+        ],
+        "correctAnswer": 1,
+        # "category": "storage and databases"
+    },
+    {
+        "text": "Under which AWS Support Plan do users gain access to Concierge support for billing and account assistance?",
+        "answers": [
+            "Basic",
+            "Developer",
+            "Business",
+            "Enterprise On-Ramp"
+        ],
+        "correctAnswer": 3,
+        # "category": "pricing and support"
+    },
+    {
+        "text": "What is the designated retrieval time for data stored in Amazon S3 Glacier Deep Archive?",
+        "answers": [
+            "Milliseconds",
+            "1-2 minutes",
+            "12-48 hours",
+            "3-5 days"
+        ],
+        "correctAnswer": 2,
+        # "category": "storage and databases"
+    },
+    {
+        "text": "How does Amazon DynamoDB achieve high availability and reliability?",
+        "answers": [
+            "By replicating data across multiple regions by default",
+            "By replicating data across multiple Availability Zones within a region",
+            "By relying on user-defined replication configurations",
+            "By using Amazon S3 for data backups"
+        ],
+        "correctAnswer": 1,
+        # "category": "storage and databases"
+    },
+    {
+        "text": "Which AWS Cloud Adoption Framework (CAF) perspective focuses on financials, business cases, and aligning cloud usage with business goals?",
+        "answers": [
+            "Governance",
+            "Operations",
+            "Business",
+            "Security"
+        ],
+        "correctAnswer": 2,
+        # "category": "migration and innovation"
+    },
+    {
+        "text": "In the AWS Well-Architected Framework, which pillar focuses on building systems that can recover from failures?",
+        "answers": [
+            "Reliability",
+            "Operational Excellence",
+            "Cost Optimization",
+            "Security"
+        ],
+        "correctAnswer": 0,
+        # "category": "security"
+    },
+    {
+        "text": "How does the AWS Enterprise Support Plan differ from the Enterprise On-Ramp Support Plan?",
+        "answers": [
+            "Enterprise Support has a 15-minute response time for business-critical issues and a designated Technical Account Manager",
+            "Enterprise On-Ramp includes 24/7 phone support while Enterprise Support does not",
+            "Enterprise Support is free for the first 12 months",
+            "Enterprise On-Ramp offers faster response times than Enterprise Support"
+        ],
+        "correctAnswer": 0,
+        # "category": "pricing and support"
+    },
+    {
+        "text": "Which AWS service offers a free data transfer in the same region between services?",
+        "answers": [
+            "Amazon CloudFront",
+            "Amazon EC2",
+            "Amazon S3",
+            "AWS Snowball"
+        ],
+        "correctAnswer": 2,
+        # "category": "pricing and support"
+    },
+    {
+        "text": "What AWS service allows up to 80 TB of data transfer on a single device for physical data migration?",
+        "answers": [
+            "Snowcone",
+            "Snowball",
+            "Snowmobile",
+            "Direct Connect"
+        ],
+        "correctAnswer": 1,
+        # "category": "migration and innovation"
+    },
+    {
+        "text": "Which AWS Snow Family member provides 100 petabytes of storage for data migration?",
+        "answers": [
+            "Snowcone",
+            "Snowball",
+            "Snowmobile",
+            "Snowcart"
+        ],
+        "correctAnswer": 2,
+        # "category": "migration and innovation"
+    },
+    {
+        "text": "What does the Operations perspective in the AWS CAF focus on?",
+        "answers": [
+            "Performance monitoring, incident management, and operational efficiency",
+            "Cloud architecture development and data storage",
+            "Governance and compliance strategies",
+            "Role definition and workforce development"
+        ],
+        "correctAnswer": 0,
+        # "category": "migration and innovation"
+    },
+    {
+        "text": "What is the main benefit of using Spot Instances in AWS EC2?",
+        "answers": [
+            "High availability",
+            "Lower costs, with savings up to 90%",
+            "Predictable performance",
+            "Increased security"
+        ],
+        "correctAnswer": 1,
+        # "category": "pricing and support"
+    },
+    {
+        "text": "How does Amazon S3 Glacier Instant Retrieval differ from Glacier Deep Archive?",
+        "answers": [
+            "Instant Retrieval offers access in milliseconds, while Deep Archive takes up to 48 hours",
+            "Deep Archive is faster but more expensive than Instant Retrieval",
+            "Deep Archive is available for 12 months free under AWS Free Tier",
+            "Instant Retrieval has a lower durability than Deep Archive"
+        ],
+        "correctAnswer": 0,
+        # "category": "storage and databases"
+    },
+    {
+        "text": "Which AWS support plan provides unrestricted technical support cases and is best for developing solutions on AWS?",
+        "answers": [
+            "Basic",
+            "Developer",
+            "Business",
+            "Enterprise On-Ramp"
+        ],
+        "correctAnswer": 1,
+        # "category": "pricing and support"
+    },
+    {
+        "text": "What AWS service provides access management and policy control features for cloud security?",
+        "answers": [
+            "Amazon S3",
+            "Amazon RDS",
+            "IAM (Identity and Access Management)",
+            "AWS Lambda"
+        ],
+        "correctAnswer": 2,
+        # "category": "security"
+    }
+]
+
+QUESTIONS_14 = [
+    {
+        "text": "What is the data storage limit for Amazon DynamoDB under the Always Free Tier?",
+        "answers": [
+            "1 GB",
+            "10 GB",
+            "25 GB",
+            "50 GB"
+        ],
+        "correctAnswer": 2,
+        # "category": "pricing and support"
+    },
+    {
+        "text": "In the AWS Well-Architected Framework, which pillar is primarily concerned with energy efficiency and reducing environmental impact?",
+        "answers": [
+            "Operational Excellence",
+            "Security",
+            "Reliability",
+            "Sustainability"
+        ],
+        "correctAnswer": 3,
+        # "category": "security"
+    },
+    {
+        "text": "Which AWS service provides six copies of data across three Availability Zones?",
+        "answers": [
+            "Amazon RDS",
+            "Amazon Aurora",
+            "Amazon DynamoDB",
+            "Amazon S3"
+        ],
+        "correctAnswer": 1,
+        # "category": "storage and databases"
+    },
+    {
+        "text": "What is the response time for the AWS Enterprise Support Plan for business-critical issues?",
+        "answers": [
+            "24 hours",
+            "12 hours",
+            "1 hour",
+            "15 minutes"
+        ],
+        "correctAnswer": 3,
+        # "category": "pricing and support"
+    },
+    {
+        "text": "What storage capacity is available with AWS Snowcone?",
+        "answers": [
+            "10 TB",
+            "14 TB",
+            "80 TB",
+            "100 PB"
+        ],
+        "correctAnswer": 1,
+        # "category": "migration and innovation"
+    },
+    {
+        "text": "Which AWS CAF perspective would focus on training, change management, and role definition?",
+        "answers": [
+            "Business",
+            "People",
+            "Governance",
+            "Operations"
+        ],
+        "correctAnswer": 1,
+        # "category": "migration and innovation"
+    },
+    {
+        "text": "Which AWS service includes a 12-month free tier for a specified amount of standard storage?",
+        "answers": [
+            "AWS Lambda",
+            "Amazon EC2",
+            "Amazon S3",
+            "Amazon RDS"
+        ],
+        "correctAnswer": 2,
+        # "category": "pricing and support"
+    },
+    {
+        "text": "Which pillar of the AWS Well-Architected Framework focuses on automation of operational procedures to improve efficiency?",
+        "answers": [
+            "Operational Excellence",
+            "Performance Efficiency",
+            "Reliability",
+            "Cost Optimization"
+        ],
+        "correctAnswer": 0,
+        # "category": "security"
+    },
+    {
+        "text": "Which AWS support plan provides unrestricted email technical support with response times under 12 hours for impaired systems?",
+        "answers": [
+            "Developer",
+            "Business",
+            "Enterprise",
+            "Basic"
+        ],
+        "correctAnswer": 0,
+        # "category": "pricing and support"
+    },
+    {
+        "text": "What is the primary focus of the Platform perspective in the AWS CAF?",
+        "answers": [
+            "Incident response and operational management",
+            "Cloud infrastructure, architecture, and scalability",
+            "Business alignment and financial goals",
+            "IAM policies and data security"
+        ],
+        "correctAnswer": 1,
+        # "category": "migration and innovation"
+    },
+    {
+        "text": "Which Amazon S3 storage tier provides the lowest-cost option for infrequent access with retrieval times of 12-48 hours?",
+        "answers": [
+            "S3 Standard",
+            "S3 Glacier Instant Retrieval",
+            "S3 Glacier Flexible Retrieval",
+            "S3 Glacier Deep Archive"
+        ],
+        "correctAnswer": 3,
+        # "category": "storage and databases"
+    },
+    {
+        "text": "Under the AWS Free Tier, how many Lambda requests per month are free?",
+        "answers": [
+            "100,000",
+            "500,000",
+            "1 million",
+            "2 million"
+        ],
+        "correctAnswer": 2,
+        # "category": "pricing and support"
+    },
+    {
+        "text": "Which CAF perspective deals with aligning cloud strategy with KPIs and financials?",
+        "answers": [
+            "Business",
+            "People",
+            "Platform",
+            "Security"
+        ],
+        "correctAnswer": 0,
+        # "category": "migration and innovation"
+    },
+    {
+        "text": "How long does AWS automatically back up data in Amazon RDS by default?",
+        "answers": [
+            "7 days",
+            "14 days",
+            "30 days",
+            "60 days"
+        ],
+        "correctAnswer": 0,
+        # "category": "storage and databases"
+    },
+    {
+        "text": "What support plan should you choose if you need direct phone access to AWS support with a 4-hour response time for production system issues?",
+        "answers": [
+            "Developer",
+            "Business",
+            "Enterprise On-Ramp",
+            "Basic"
+        ],
+        "correctAnswer": 1,
+        # "category": "pricing and support"
+    },
+    {
+        "text": "Which AWS service automatically replicates data across Availability Zones to improve durability?",
+        "answers": [
+            "Amazon Aurora",
+            "Amazon CloudFront",
+            "Amazon EC2",
+            "AWS IAM"
+        ],
+        "correctAnswer": 0,
+        # "category": "storage and databases"
+    },
+    {
+        "text": "What is the primary focus of the Operations perspective in the AWS CAF?",
+        "answers": [
+            "Incident and event management, backups, and performance monitoring",
+            "Defining business objectives and aligning cloud strategy",
+            "Policies and compliance management",
+            "Training and change management"
+        ],
+        "correctAnswer": 0,
+        # "category": "migration and innovation"
+    },
+    {
+        "text": "Which AWS Snow Family device can store up to 100 petabytes for data transfer?",
+        "answers": [
+            "Snowcone",
+            "Snowmobile",
+            "Snowball",
+            "Glacier Deep Archive"
+        ],
+        "correctAnswer": 1,
+        # "category": "migration and innovation"
+    },
+    {
+        "text": "How does Amazon Aurora maintain high availability of data?",
+        "answers": [
+            "By storing six copies across three Availability Zones",
+            "By using a single Availability Zone with automatic backups",
+            "By relying on user-defined replication",
+            "By using Amazon S3 as backup"
+        ],
+        "correctAnswer": 0,
+        # "category": "storage and databases"
+    },
+    {
+        "text": "Which support plan includes a pool of Technical Account Managers to provide additional guidance?",
+        "answers": [
+            "Developer",
+            "Business",
+            "Enterprise On-Ramp",
+            "Basic"
+        ],
+        "correctAnswer": 2,
+        # "category": "pricing and support"
+    }
+]
+
+QUESTIONS_15 = [
+    {
+        "text": "In Amazon Aurora, how many copies of data are stored across Availability Zones, and where is data backed up continuously?",
+        "answers": [
+            "Four copies in two Availability Zones, backed up to Amazon RDS",
+            "Six copies in three Availability Zones, backed up to Amazon S3",
+            "Three copies in two Availability Zones, backed up to Amazon Glacier",
+            "Nine copies in three Availability Zones, backed up to Amazon DynamoDB"
+        ],
+        "correctAnswer": 1
+    },
+    {
+        "text": "Which AWS Well-Architected Framework pillar emphasizes automation of operational procedures to enhance efficiency and reduce manual intervention?",
+        "answers": [
+            "Reliability",
+            "Performance Efficiency",
+            "Operational Excellence",
+            "Cost Optimization"
+        ],
+        "correctAnswer": 2
+    },
+    {
+        "text": "In the AWS CAF Governance perspective, what specific practice is recommended to ensure secure access to cloud resources?",
+        "answers": [
+            "Implementation of cloud training programs",
+            "Defining business objectives and KPIs",
+            "Establishing IAM policies and using logging and monitoring",
+            "Defining financial metrics and case studies"
+        ],
+        "correctAnswer": 2
+    },
+    {
+        "text": "Which support plan offers access to the AWS Health API, Trusted Advisor checks, and has response times of under 1 hour for production system failures?",
+        "answers": [
+            "Basic",
+            "Developer",
+            "Business",
+            "Enterprise On-Ramp"
+        ],
+        "correctAnswer": 3
+    },
+    {
+        "text": "How does AWS Snowmobile securely transport data from client locations to AWS?",
+        "answers": [
+            "By replicating data across multiple regions during transit",
+            "Through encrypted network connections only",
+            "Using specialized vehicles with physical and network encryption",
+            "Through portable encrypted SSDs delivered to AWS facilities"
+        ],
+        "correctAnswer": 2
+    },
+    {
+        "text": "Which AWS Free Tier service includes 25 GB of storage per month for free?",
+        "answers": [
+            "Amazon RDS",
+            "Amazon S3",
+            "Amazon DynamoDB",
+            "Amazon EC2"
+        ],
+        "correctAnswer": 2
+    },
+    {
+        "text": "Which S3 storage tier is recommended for data that requires instant retrieval with minimal access frequency?",
+        "answers": [
+            "S3 Standard",
+            "S3 Glacier Flexible Retrieval",
+            "S3 Glacier Deep Archive",
+            "S3 Glacier Instant Retrieval"
+        ],
+        "correctAnswer": 3
+    },
+    {
+        "text": "What AWS CAF perspective is primarily responsible for aligning cloud initiatives with business strategy, goals, and KPIs?",
+        "answers": [
+            "Platform",
+            "People",
+            "Business",
+            "Governance"
+        ],
+        "correctAnswer": 2
+    },
+    {
+        "text": "Which of the following can enable up to 90% cost savings on Amazon EC2 instances?",
+        "answers": [
+            "Reserved Instances",
+            "Spot Instances",
+            "On-Demand Instances",
+            "Dedicated Hosts"
+        ],
+        "correctAnswer": 1
+    },
+    {
+        "text": "How does Amazon RDS provide automated backups for databases, and what is the default backup retention period?",
+        "answers": [
+            "By storing snapshots every 30 minutes; 14 days retention",
+            "Using continuous backups stored on Amazon Glacier; 7 days retention",
+            "By taking automatic daily snapshots; 7 days retention",
+            "Using multi-AZ replication for high availability; 30 days retention"
+        ],
+        "correctAnswer": 2
+    },
+    {
+        "text": "In the Well-Architected Framework, which pillar emphasizes optimization of workloads for consistent high performance under various demand levels?",
+        "answers": [
+            "Reliability",
+            "Performance Efficiency",
+            "Operational Excellence",
+            "Cost Optimization"
+        ],
+        "correctAnswer": 1
+    },
+    {
+        "text": "Which AWS service provides data replication across three Availability Zones to enhance durability?",
+        "answers": [
+            "Amazon EC2",
+            "Amazon Aurora",
+            "Amazon S3",
+            "AWS Lambda"
+        ],
+        "correctAnswer": 1
+    },
+    {
+        "text": "In AWS CAF, which perspective is focused on policies, access management, and risk assessment?",
+        "answers": [
+            "Governance",
+            "Operations",
+            "Platform",
+            "People"
+        ],
+        "correctAnswer": 0
+    },
+    {
+        "text": "Which support plan includes direct access to Technical Account Managers (TAMs) and a 15-minute response time for business-critical issues?",
+        "answers": [
+            "Developer",
+            "Business",
+            "Enterprise",
+            "Enterprise On-Ramp"
+        ],
+        "correctAnswer": 2
+    },
+    {
+        "text": "Which Snow Family device can handle data transfer needs up to 80 TB?",
+        "answers": [
+            "Snowcone",
+            "Snowball",
+            "Snowmobile",
+            "AWS Storage Gateway"
+        ],
+        "correctAnswer": 1
+    },
+    {
+        "text": "What are the recommended uses for Amazon S3 Glacier Deep Archive?",
+        "answers": [
+            "Frequent retrievals with low latency requirements",
+            "Infrequent access with occasional retrieval needs",
+            "Archival storage with retrieval times ranging from 12 to 48 hours",
+            "Real-time analytics and data processing"
+        ],
+        "correctAnswer": 2
+    },
+    {
+        "text": "What is the maximum response time for support requests under the Developer support plan?",
+        "answers": [
+            "1 hour",
+            "12 hours",
+            "24 hours",
+            "48 hours"
+        ],
+        "correctAnswer": 2
+    },
+    {
+        "text": "Which AWS service allows data to be transferred into AWS at no cost when staying within the same region?",
+        "answers": [
+            "Amazon EC2",
+            "Amazon RDS",
+            "AWS Lambda",
+            "Amazon S3"
+        ],
+        "correctAnswer": 3
+    },
+    {
+        "text": "Which AWS CAF perspective covers cloud culture, HR management, and team training aspects?",
+        "answers": [
+            "People",
+            "Business",
+            "Operations",
+            "Security"
+        ],
+        "correctAnswer": 0
+    },
+    {
+        "text": "For which of the following scenarios is the AWS S3 Glacier Flexible Retrieval option best suited?",
+        "answers": [
+            "Data required for real-time analytics",
+            "Data needed in milliseconds",
+            "Data required with retrieval times between 1 minute and 12 hours",
+            "Data access limited to once per month"
+        ],
+        "correctAnswer": 2
+    },
+    {
+        "text": "How does Amazon DynamoDB ensure durability and availability across multiple regions?",
+        "answers": [
+            "Through multi-AZ replication",
+            "By continuous snapshots to Amazon S3",
+            "Using point-in-time recovery with Amazon RDS",
+            "By default replication across three regions"
+        ],
+        "correctAnswer": 0
+    },
+    {
+        "text": "In AWS's shared responsibility model, what is AWS responsible for when managing Amazon S3 data?",
+        "answers": [
+            "Configuring access control lists (ACLs)",
+            "Encrypting data upon upload",
+            "Infrastructure security of storage hardware",
+            "Data classification and compliance"
+        ],
+        "correctAnswer": 2
+    },
+    {
+        "text": "What response time is guaranteed for business-critical issues under the AWS Enterprise On-Ramp support plan?",
+        "answers": [
+            "1 hour",
+            "30 minutes",
+            "15 minutes",
+            "4 hours"
+        ],
+        "correctAnswer": 1
+    },
+    {
+        "text": "Which AWS Snow Family device is designed for data migrations of up to 14 TB with rugged portability?",
+        "answers": [
+            "Snowcone",
+            "Snowball",
+            "Snowmobile",
+            "AWS Storage Gateway"
+        ],
+        "correctAnswer": 0
+    },
+    {
+        "text": "What is a key characteristic of Spot Instances that differentiates them from Reserved Instances?",
+        "answers": [
+            "They are available at a fixed cost",
+            "They can be terminated by AWS if capacity is required",
+            "They are reserved for 1-3 years",
+            "They have access to all instance types"
+        ],
+        "correctAnswer": 1
+    },
+    {
+        "text": "In the AWS Well-Architected Framework, which pillar focuses on protecting workloads through encryption, threat detection, and IAM?",
+        "answers": [
+            "Operational Excellence",
+            "Security",
+            "Reliability",
+            "Performance Efficiency"
+        ],
+        "correctAnswer": 1
+    },
+    {
+        "text": "What AWS support level includes Concierge support for billing and account assistance?",
+        "answers": [
+            "Basic",
+            "Developer",
+            "Enterprise",
+            "Business"
+        ],
+        "correctAnswer": 2
+    },
+    {
+        "text": "Which AWS CAF perspective is responsible for incident and event management as part of cloud operations?",
+        "answers": [
+            "Operations",
+            "Platform",
+            "Security",
+            "Governance"
+        ],
+        "correctAnswer": 0
+    },
+    {
+        "text": "Which Amazon S3 storage tier offers instant access and is cost-effective for data accessed infrequently?",
+        "answers": [
+            "S3 Standard-IA",
+            "S3 Glacier Deep Archive",
+            "S3 One Zone-IA",
+            "S3 Glacier Flexible Retrieval"
+        ],
+        "correctAnswer": 0
+    },
+    {
+        "text": "What AWS service provides up to 3.2 million seconds of compute time per month under the Always Free Tier?",
+        "answers": [
+            "Amazon EC2",
+            "AWS Lambda",
+            "Amazon RDS",
+            "Amazon S3"
+        ],
+        "correctAnswer": 1
+    }
+]
+
+QUESTIONS_16 = [
+    {
+        "text": "Which Aurora feature enhances durability by storing six copies of data across multiple Availability Zones?",
+        "answers": [
+            "Data replication across multiple regions",
+            "Six copies of data across three Availability Zones",
+            "Automatic scaling across zones",
+            "Serverless scaling"
+        ],
+        "correctAnswer": 1,
+    },
+    {
+        "text": "Under which AWS support plan do you have access to all AWS Trusted Advisor checks and receive a 4-hour response time for production system impairments?",
+        "answers": [
+            "Basic",
+            "Developer",
+            "Business",
+            "Enterprise"
+        ],
+        "correctAnswer": 2,
+    },
+    {
+        "text": "How does Amazon S3 ensure the high durability of stored data across regions and zones, particularly with Glacier storage classes?",
+        "answers": [
+            "Replicates data across availability zones",
+            "Data is replicated between regions",
+            "Data is encrypted and compressed before storage",
+            "Data is replicated across regions every 24 hours"
+        ],
+        "correctAnswer": 0,
+    },
+    {
+        "text": "Which AWS CAF perspective is specifically concerned with training, change management, and defining roles to support cloud migration?",
+        "answers": [
+            "Business",
+            "People",
+            "Security",
+            "Platform"
+        ],
+        "correctAnswer": 1,
+    },
+    {
+        "text": "Which service is ideal for quickly transferring large volumes of data to AWS when local internet bandwidth is limited, and requires up to 100 PB storage capacity?",
+        "answers": [
+            "AWS Snowcone",
+            "AWS Snowball",
+            "AWS Snowmobile",
+            "AWS Direct Connect"
+        ],
+        "correctAnswer": 2,
+    },
+    {
+        "text": "What is the maximum response time for business-critical issues under the AWS Enterprise support plan?",
+        "answers": [
+            "1 hour",
+            "30 minutes",
+            "15 minutes",
+            "4 hours"
+        ],
+        "correctAnswer": 2,
+    },
+    {
+        "text": "What type of storage is recommended for data with unpredictable retrieval requirements but requires milliseconds-level access?",
+        "answers": [
+            "S3 Standard",
+            "S3 Glacier Instant Retrieval",
+            "EBS Volume",
+            "RDS"
+        ],
+        "correctAnswer": 1,
+    },
+    {
+        "text": "In AWS’s shared responsibility model, which of the following is an AWS responsibility for Amazon S3?",
+        "answers": [
+            "Managing encryption of data at rest",
+            "Managing encryption of data in transit",
+            "Managing access control policies",
+            "All of the above"
+        ],
+        "correctAnswer": 0,
+    },
+    {
+        "text": "Which of the following is free under the AWS Free Tier for 12 months but has specific storage limitations?",
+        "answers": [
+            "S3 Standard storage",
+            "Lambda",
+            "EC2 instances",
+            "CloudFront data transfer out"
+        ],
+        "correctAnswer": 0,
+    },
+    {
+        "text": "Which AWS Well-Architected pillar is focused on maintaining the ability of workloads to recover from infrastructure or service failures?",
+        "answers": [
+            "Reliability",
+            "Performance Efficiency",
+            "Security",
+            "Cost Optimization"
+        ],
+        "correctAnswer": 0,
+    },
+    {
+        "text": "What is the primary use of AWS Cost Explorer?",
+        "answers": [
+            "Monitor application performance",
+            "Create cost reports and forecasts",
+            "Optimize cloud architecture",
+            "Automate backup processes"
+        ],
+        "correctAnswer": 1,
+    },
+    {
+        "text": "Which of the following does AWS Trusted Advisor NOT provide checks for?",
+        "answers": [
+            "Security",
+            "Performance",
+            "Fault tolerance",
+            "Identity and access management"
+        ],
+        "correctAnswer": 3,
+    },
+    {
+        "text": "What is the response time provided by AWS Developer Support for general inquiries?",
+        "answers": [
+            "1 hour",
+            "12 hours",
+            "24 hours",
+            "48 hours"
+        ],
+        "correctAnswer": 2,
+    },
+    {
+        "text": "In the AWS CAF, which perspective addresses the alignment of cloud strategies with business objectives and financial management?",
+        "answers": [
+            "Business",
+            "People",
+            "Governance",
+            "Operations"
+        ],
+        "correctAnswer": 0,
+    },
+    {
+        "text": "Which AWS service offers block-level storage for EC2 instances and provides snapshots for backup?",
+        "answers": [
+            "S3",
+            "EBS",
+            "EFS",
+            "Glacier"
+        ],
+        "correctAnswer": 1,
+    },
+    {
+        "text": "Which AWS pricing model offers the ability to save up to 90% on EC2 costs?",
+        "answers": [
+            "On-demand instances",
+            "Reserved instances",
+            "Spot instances",
+            "Savings plans"
+        ],
+        "correctAnswer": 2,
+    },
+    {
+        "text": "Which of the following storage classes in S3 provides the cheapest option but has an access time of 12-48 hours?",
+        "answers": [
+            "Standard",
+            "Intelligent-Tiering",
+            "Glacier Deep Archive",
+            "S3 One Zone-IA"
+        ],
+        "correctAnswer": 2,
+    },
+    {
+        "text": "Which AWS service automatically provides backups for relational databases?",
+        "answers": [
+            "Amazon S3",
+            "Amazon RDS",
+            "AWS Backup",
+            "Amazon Aurora"
+        ],
+        "correctAnswer": 1,
+    },
+    {
+        "text": "Which AWS service allows you to store and manage Docker images?",
+        "answers": [
+            "Amazon S3",
+            "Amazon ECS",
+            "AWS Lambda",
+            "Amazon ECR"
+        ],
+        "correctAnswer": 3,
+    },
+    {
+        "text": "What AWS service enables automatic scaling of applications without provisioning or managing servers?",
+        "answers": [
+            "AWS Lambda",
+            "Amazon ECS",
+            "AWS Elastic Beanstalk",
+            "AWS Fargate"
+        ],
+        "correctAnswer": 0,
+    },
+    {
+        "text": "Which AWS service is used for real-time data processing and management of NoSQL databases?",
+        "answers": [
+            "Amazon RDS",
+            "Amazon DynamoDB",
+            "Amazon Redshift",
+            "Amazon S3"
+        ],
+        "correctAnswer": 1,
+    },
+    {
+        "text": "Which of the following AWS services provides a managed environment for running Kubernetes clusters?",
+        "answers": [
+            "Amazon ECS",
+            "Amazon EKS",
+            "Amazon Fargate",
+            "Amazon Lambda"
+        ],
+        "correctAnswer": 1,
+    },
+]
