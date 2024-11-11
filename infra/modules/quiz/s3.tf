@@ -77,6 +77,9 @@ resource "local_file" "config_json" {
   filename = "${path.module}/${var.npm_output_dir}/config.json"
   content  = jsonencode({
     apiUrl = "${aws_apigatewayv2_api.api-gateway.api_endpoint}"
+    userPoolId = "${aws_cognito_user_pool.user_pool.id}"
+    userPoolWebClientId = "${aws_cognito_user_pool_client.user_pool_client.id}"
+    region = "${var.region}"
   })
 
   depends_on = [ aws_apigatewayv2_api.api-gateway ]

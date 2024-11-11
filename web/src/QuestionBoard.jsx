@@ -34,9 +34,9 @@ function QuestionBoard({ onSubmit, onNextQuestion, isSubmitted, question, header
         ))}
         {
           isSubmitted ?
-          <button type="button" onClick={onNextQuestion}>Next</button>
+          <button type="button" onClick={onNextQuestion} className="primary-button">Next</button>
           :
-          <button type="submit" disabled={selectedAnswer === null}>Submit</button>
+          <button type="submit" disabled={selectedAnswer === null} className="primary-button">Submit</button>
         }
       </form>
     </div>

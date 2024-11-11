@@ -1,63 +1,149 @@
-*,
-*::before,
-*::after {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* Ensure the root takes up the full window */
+/* Root Container - Center Content */
 #root {
     display: flex;
-    justify-content: center; /* Centers horizontally */
-    align-items: center;     /* Centers vertically */
-    min-height: 100vh;       /* Ensure root takes the entire viewport height */
-    width: 100vw;            /* Full viewport width */
-    background-color: #f4f4f4; /* Background color for root container */
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Full viewport height */
+    width: 100vw;      /* Full viewport width */
+    background-color: #f4f4f4;
 }
 
-/* Center #questionApp and make it tight around its content */
-#questionApp {
-    background-color: white;  /* Background color for the form container */
-    padding: 20px;            /* Padding around the content */
-    border-radius: 10px;      /* Optional: Rounded corners */
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow */
-    max-width: 500px;         /* Optional: Limit the width */
-    width: 100%;              /* Makes sure it doesn't stretch unnecessarily */
+/* Main App Container */
+#questionApp, #loginApp, #resultBoard {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 100%;
+    margin: 0 auto;
 }
 
-/* Styling for the header */
-#questionHeader h1 {
-    margin-bottom: 10px;
-}
-
-/* Styling for the form */
-#questionForm h1 {
-    margin-bottom: 10px;
-    font-size: 1.5rem;
-}
-
-#questionForm p {
+/* Header Styling */
+#questionHeader h1, #loginHeader h1, #resultBoardHeader h1 {
     margin-bottom: 15px;
+    font-size: 1.5rem;
+    color: #333;
 }
 
-/* Style the form elements */
-input[type="radio"] {
-    margin-right: 5px;
+/* Form Styling for Labels and Text */
+#questionForm h1, #loginForm label, #questionForm p {
+    margin-bottom: 10px;
+    font-size: 1rem;
+    color: #555;
 }
 
-button {
-    margin-top: 20px;
+/* Align radio button and label for each answer option */
+/* Ensure each radio button and label are displayed inline */
+#questionForm input[type="radio"] {
+    margin-right: 8px; /* Space between radio button and label */
+    vertical-align: middle; /* Aligns radio button with label text */
+}
+
+#questionForm input[type="radio"] + label {
+    display: inline-flex; /* Ensures the label stays inline with the radio button */
+    align-items: center;
+    margin-right: 15px; /* Space between each radio option */
+}
+
+
+/* Result Board Content */
+#resultBoardHeader p {
+    font-size: 1.2rem;
+    color: #555;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/* Input Styling */
+.form-input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+/* Primary and Secondary Button Styles */
+.primary-button,
+.secondary-button {
     padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    font-size: 1rem;
 }
 
-button:hover {
+.primary-button {
+    background-color: #007bff;
+    color: white;
+    margin-top: 15px;
+}
+
+.primary-button:hover {
     background-color: #0056b3;
 }
 
+.secondary-button {
+    background-color: #6c757d;
+    color: white;
+    margin-top: 10px;
+}
+
+.secondary-button:hover {
+    background-color: #5a6268;
+}
+
+/* Verification Buttons Container */
+.verification-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.verification-buttons button {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+}
+
+/* User Banner Styling */
+#userBanner {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    background-color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+    color: #333;
+    z-index: 1000; /* Ensure the banner is above other elements */
+}
+
+#userBanner span {
+    font-weight: 500;
+    color: #555;
+}
+
+/* login.css */
+.guest-access {
+    margin-top: 1em;
+    text-align: center;
+  }
+  
+  .guest-link {
+    color: #007bff; /* Bootstrap blue */
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
+  .guest-link:hover {
+    color: #0056b3; /* Darker blue on hover */
+  }
+  
