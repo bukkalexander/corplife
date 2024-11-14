@@ -141,6 +141,12 @@
     color: #555;
 }
 
+#userBanner .user-score {
+    font-weight: bold;
+    color: #007bff; 
+    font-size: 0.9rem;
+}
+
 /* login.css */
 .guest-access {
     margin-top: 1em;

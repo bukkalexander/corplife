@@ -98,11 +98,8 @@ const fetchUserScore = async (api_url, user) => {
   try {
     console.log("Fetching user score...");
 
-    // Get ID token for authenticated users
     const session = await fetchAuthSession();
     const idToken = session.tokens.idToken;
-
-    console.log(`Authorization: ${idToken}`)
 
     const response = await fetch(fetchScoreUrl, {
       headers: {
@@ -111,11 +108,16 @@ const fetchUserScore = async (api_url, user) => {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch user score: ${response.statusText}`);
+      // Log error details from the response
+      const errorData = await response.json();
+      console.error("Error fetching user score:", errorData.detail);
+      return null;
     }
-    return await response.json();
+
+    const data = await response.json();
+    return { username: data.username, score: data.score };
   } catch (error) {
-    console.error("Error fetching user score:", error);
+    console.error("Error fetching user score:", error.message);
     return null;
   }
 };
@@ -129,10 +131,10 @@ function App() {
   const [score, setScore] = useState(0);
   const [scoreData, setScoreData] = useState(null);
   const [scoreDataList, setScoreDataList] = useState([]);
-
   const [isFetchingQuestions, setIsFetchingQuestions] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [user, setUser] = useState(null);
+  const [userScore, setUserScore] = useState(null); // Cumulative score from backend
   const [cognitoConfigured, setCognitoConfigured] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -215,16 +217,19 @@ function App() {
   useEffect(() => {
     const loadUserScore = async () => {
       if (!config || !user || user === "Guest") {
-        setScore(null); // Default score for Guest or no user
+        setUserScore(null); // Default userScore for Guest or no user
         return;
       }
   
-      const fetchedScore = await fetchUserScore(config.apiUrl, user);
-      setScore(fetchedScore);
+      const fetchedUserScore = await fetchUserScore(config.apiUrl, user);
+      if (fetchedUserScore) {
+        setUserScore(fetchedUserScore.score); // Set the cumulative score
+      }
     };
   
     loadUserScore();
   }, [config, user]);
+  
 
   const handleLogin = async (username, password) => {
     try {
@@ -372,7 +377,13 @@ setErrorMessage('');
   return (
     <>
       {/* Display UserBanner if the user is logged in */}
-      {user && <UserBanner username={user} onLogout={handleLogout} />}
+      {user && (
+        <UserBanner
+          username={user}
+          userScore={userScore}
+          onLogout={handleLogout}
+        />
+      )}
 
       {isQuizCompleted ? (
         <LeaderBoard
