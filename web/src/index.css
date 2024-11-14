@@ -157,3 +157,8 @@
     color: #0056b3; /* Darker blue on hover */
   }
   
+  .error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 10px;
+  }

@@ -22,3 +22,7 @@ output "fronted_url" {
 output "lambda_function_name" {
   value = module.quiz.lambda_function_name
 }
+
+output "user_pool_client_id" {
+  value = module.quiz.user_pool_client_id
+}

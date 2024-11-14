@@ -29,24 +29,49 @@ resource "aws_iam_role_policy" "lambda_dynamodb_policy" {
   role   = aws_iam_role.lambda-exec-role.name
 
   policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
+    Version = "2012-10-17",
+    Statement = [
       {
-        "Effect": "Allow",
-        "Action": [
+        Effect = "Allow",
+        Action = [
           "dynamodb:PutItem",
           "dynamodb:GetItem",
           "dynamodb:UpdateItem",
-          "dynamodb:DeleteItem" 
+          "dynamodb:DeleteItem",
+          "dynamodb:Scan",
         ],
-        "Resource": "${aws_dynamodb_table.corplife-quiz-questions.arn}"
+        Resource = [
+          "${aws_dynamodb_table.corplife-quiz-questions.arn}",
+          "${aws_dynamodb_table.corplife-quiz-users.arn}"
+        ]      
+      }
+    ]
+  })
+}
+
+# Allow Cognito read
+
+resource "aws_iam_role_policy" "lambda_cognito_policy" {
+  name   = "lambda_cognito_dynamodb_policy"
+  role   = aws_iam_role.lambda-exec-role.name
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "cognito-idp:ListUsers",
+          "cognito-idp:ListGroups",
+          "cognito-idp:ListUsersInGroup",
+        ]
+        Resource = "${aws_cognito_user_pool.user_pool.arn}"
       }
     ]
   })
 }
 
 
-# Allow API
+# Allow API to invoke BE Lambda
 
 # Permission for API Gateway to invoke the Lambda function
 resource "aws_lambda_permission" "api-gateway-lambda-permission" {
@@ -59,4 +84,22 @@ resource "aws_lambda_permission" "api-gateway-lambda-permission" {
 }
 
 
+# Allow EventBridge to trigger reconciliation Lambda
 
+resource "aws_lambda_permission" "allow-eventbridge" {
+  statement_id  = "AllowExecutionFromEventBridge"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.reconciliation_lambda.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.schedule_lambda.arn
+}
+
+# Allow Cognito to trigger post sign up hook lambda
+
+resource "aws_lambda_permission" "allow_cognito_invoke" {
+  statement_id  = "AllowCognitoInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.post_confirmation_trigger.arn
+  principal     = "cognito-idp.amazonaws.com"
+  source_arn    = aws_cognito_user_pool.user_pool.arn
+}

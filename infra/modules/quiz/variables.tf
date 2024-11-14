@@ -41,6 +41,18 @@ variable "lambda_function_archive_path" {
   default = "lambda/corplife_quiz.zip"
 }
 
+variable "lambda_function_reconciler_archive_path" {
+  type = string
+  description = "The path to the lambda function archive relative to module that is responsible for reconciling dyanmodb and cognito"
+  default = "lambda/reconciliation.zip"
+}
+
+variable "lambda_function_signup_hook_archive_path" {
+  type = string
+  description = "The path to the lambda function archive relative to module that is responsible for adding user to dynamodb on signup"
+  default = "lambda/post_signup.zip"
+}
+
 variable "npm_output_dir" {
   type = string
   description = "The path to the lambda function archive relative to module"

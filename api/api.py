@@ -1,23 +1,21 @@
 from datetime import datetime
 import json
 from pathlib import Path
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
-
+import logging
+import os
 
 from data import QUESTIONS_0 as QUESTIONS
 from question import Question
-from score_data import ScoreData
-
-SCORES_FILE = Path("scores.json")
 
 app = FastAPI()
 
 # Allow requests from the web server domain origin
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # needed locally, but will be overriden in API Gatewat in production
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -27,6 +25,18 @@ app.add_middleware(
 @app.get("/questions", response_model=List[Question])
 async def get_questions():
     return QUESTIONS
+
+
+@app.api_route("/user/score", methods=["GET", "POST"])
+async def get_user_score(request: Request):
+    """Extract the raw AWS Lambda event."""
+    scope = request.scope
+    event = scope.get("aws.event", {})  # Access the Lambda event from scope
+    logger.debug(f"Raw Lambda event: {event}")
+    claims = event.get("requestContext", {}).get("authorizer", {}).get("claims", {})
+    user_id = claims.get("sub", "unknown")
+
+    return {"userId": user_id, "score": 42}
 
 
 @app.post("/score", response_model=ScoreData)
