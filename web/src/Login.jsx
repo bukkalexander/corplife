@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 
 function Login({ onLogin, onSignUp, onVerify, onResend, onGuestLogin }) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
-  const [verificationCode, setVerificationCode] = useState("");
+  const [verificationCode, setVerificationCode] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -20,10 +20,10 @@ function Login({ onLogin, onSignUp, onVerify, onResend, onGuestLogin }) {
   };
 
   return (
-    <div id="loginApp">
-      <div id="loginHeader">
-        <h1>{isVerifying ? "Verify Account" : isSignUp ? "Sign Up" : "Login"}</h1>
-      </div>
+    <div className="container-card">
+      <h1 className="header-text">
+        {isVerifying ? 'Verify Account' : isSignUp ? 'Sign Up' : 'Login'}
+      </h1>
       <form onSubmit={handleSubmit} id="loginForm">
         <label htmlFor="username">Username:</label>
         <input
@@ -75,7 +75,10 @@ function Login({ onLogin, onSignUp, onVerify, onResend, onGuestLogin }) {
               className="form-input"
             />
             <div className="verification-buttons">
-              <button type="button" onClick={() => onVerify(username, verificationCode)}>
+              <button
+                type="button"
+                onClick={() => onVerify(username, verificationCode)}
+              >
                 Verify
               </button>
               <button type="button" onClick={() => onResend(username)}>
@@ -86,17 +89,28 @@ function Login({ onLogin, onSignUp, onVerify, onResend, onGuestLogin }) {
         )}
 
         <button type="submit" className="primary-button">
-          {isVerifying ? "Submit Code" : isSignUp ? "Sign Up" : "Login"}
+          {isVerifying ? 'Submit Code' : isSignUp ? 'Sign Up' : 'Login'}
         </button>
 
         {!isVerifying && (
-          <button type="button" onClick={() => setIsSignUp(!isSignUp)} className="secondary-button">
-            {isSignUp ? "Already have an account? Login" : "New user? Sign Up"}
+          <button
+            type="button"
+            onClick={() => setIsSignUp(!isSignUp)}
+            className="secondary-button"
+          >
+            {isSignUp ? 'Already have an account? Login' : 'New user? Sign Up'}
           </button>
         )}
 
         <div className="guest-access">
-          <a href="#continue-as-guest" onClick={(e) => { e.preventDefault(); onGuestLogin(); }} className="guest-link">
+          <a
+            href="#continue-as-guest"
+            onClick={(e) => {
+              e.preventDefault();
+              onGuestLogin();
+            }}
+            className="guest-link"
+          >
             Continue as Guest
           </a>
         </div>
