@@ -1,5 +1,7 @@
 from datetime import datetime, timezone
+from contextlib import asynccontextmanager
 import boto3
+from moto import mock_aws
 from botocore.exceptions import ClientError
 import json
 from pathlib import Path
@@ -7,22 +9,79 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 import logging
-import os
 from score_data import ScoreData
+from config import API_HOST, DYNAMODB_TABLE_NAME_USERS, DYNAMODB_TABLE_NAME_QUESTIONS, REGION
 
-# Cofigure logger
-LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
+# Configure logger
+LOG_LEVEL = "INFO"
 logging.getLogger("mangum").setLevel(LOG_LEVEL)
 logger = logging.getLogger("mangum")
 
-DYNAMODB_TABLE_NAME_QUESTIONS =  os.getenv('DYNAMODB_TABLE_NAME_QUESTIONS', None)
-DYNAMODB_TABLE_NAME_USERS =  os.getenv('DYNAMODB_TABLE_NAME_USERS', None)
 SCORES_FILE = Path("scores.json")
 
 from data import QUESTIONS_0 as QUESTIONS
 from question import Question
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """
+    Manage the application's lifespan with setup and teardown logic.
+    """
+    IS_LOCALHOST = API_HOST in ["localhost", "127.0.0.1"]
+    if IS_LOCALHOST:
+        print(f"Using Moto to mock DynamoDB for table {DYNAMODB_TABLE_NAME_USERS}.")
+
+        # Start Moto mocking
+        mock = mock_aws()
+        mock.start()
+
+        # Setup mocked DynamoDB
+        dynamodb = boto3.resource("dynamodb", region_name=REGION)
+        table = dynamodb.create_table(
+            TableName=DYNAMODB_TABLE_NAME_USERS,
+            KeySchema=[
+                {"AttributeName": "username", "KeyType": "HASH"},
+            ],
+            AttributeDefinitions=[
+                {"AttributeName": "username", "AttributeType": "S"},
+                {"AttributeName": "score", "AttributeType": "N"},
+            ],
+            ProvisionedThroughput={
+                "ReadCapacityUnits": 5,
+                "WriteCapacityUnits": 5,
+            },
+            GlobalSecondaryIndexes=[
+                {
+                    "IndexName": "ScoreIndex",
+                    "KeySchema": [
+                        {"AttributeName": "username", "KeyType": "HASH"},
+                        {"AttributeName": "score", "KeyType": "RANGE"},
+                    ],
+                    "Projection": {"ProjectionType": "ALL"},
+                }
+            ],
+        )
+
+        # Insert sample data
+        with table.batch_writer() as batch:
+            batch.put_item({"username": "test_user", "score": 100})
+            batch.put_item({"username": "another_user", "score": 200})
+            batch.put_item({"username": "example_user", "score": 300})
+
+        print(f"Moto DynamoDB setup complete with table {DYNAMODB_TABLE_NAME_USERS}.")
+    else:
+        mock = None
+
+    yield
+
+    # Clean up
+    if IS_LOCALHOST and mock:
+        print("Stopping Moto mocking for DynamoDB.")
+        mock.stop()
+
+
+# Initialize the FastAPI app with the lifespan context
+app = FastAPI(lifespan=lifespan)
 
 # Allow requests from the web server domain origin
 app.add_middleware(
@@ -33,9 +92,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize DynamoDB client
-dynamodb = boto3.resource("dynamodb")
-users_table = dynamodb.Table(DYNAMODB_TABLE_NAME_USERS)
 
 @app.get("/questions", response_model=List[Question])
 async def get_questions():
@@ -57,7 +113,9 @@ async def get_user_score(request: Request):
             raise HTTPException(status_code=400, detail="Missing username in claims.")
 
         # Query DynamoDB to get the user's score
-        response = users_table.get_item(Key={"username": username})
+        dynamodb = boto3.resource("dynamodb")
+        table = dynamodb.Table(DYNAMODB_TABLE_NAME_USERS)
+        response = table.get_item(Key={"username": username})
         user_data = response.get("Item", None)
 
         if not user_data:
@@ -87,9 +145,9 @@ async def get_user_score(request: Request):
 
 @app.post("/score", response_model=ScoreData)
 async def create_score(score_data: ScoreData):
-    
+    """Save a new score."""
     scores = read_scores()
-    
+
     # Find the highest existing ID and increment by 1
     max_id = max((score['id'] for score in scores), default=0)
     score_data.id = max_id + 1
@@ -99,18 +157,23 @@ async def create_score(score_data: ScoreData):
     write_scores(scores)
     return score_data
 
+
 def read_scores() -> List[ScoreData]:
+    """Read scores from a file."""
     if not SCORES_FILE.exists():
         return []
     with open(SCORES_FILE, "r") as file:
         return json.load(file)
 
+
 def write_scores(scores: List[ScoreData]):
+    """Write scores to a file."""
     with SCORES_FILE.open("w") as file:
         json.dump(scores, file, indent=4)
 
 
 @app.get("/scores", response_model=List[ScoreData])
 async def get_scores():
+    """Fetch all scores."""
     scores = read_scores()
     return scores
