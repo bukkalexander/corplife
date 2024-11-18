@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
 from contextlib import asynccontextmanager
+import time
 import boto3
 from moto import mock_aws
 from botocore.exceptions import ClientError
@@ -100,6 +101,7 @@ async def get_questions():
 
 @app.get("/user/score")
 async def get_user_score(request: Request):
+    start_time = time.time()
     """Fetch user score from DynamoDB."""
     try:
         # Extract user claims from the request context
@@ -141,6 +143,11 @@ async def get_user_score(request: Request):
             status_code=500,
             detail=f"Unexpected error: {str(e)}"
         )
+    
+    finally:
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+        logger.debug(f"Execution time for get_user_score: {elapsed_time:.4f} seconds")
 
 
 @app.post("/score", response_model=ScoreData)
