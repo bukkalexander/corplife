@@ -1,11 +1,11 @@
 import React from 'react';
 
-function UserBanner({ username, userScore, onLogout }) {
+function UserBanner({ username, userXp, onLogout }) {
   return (
     <div id="userBanner">
       <span>Welcome, {username}!</span>
-      {userScore !== null && (
-        <span className="user-score">| Cumulative Score: {userScore}</span>
+      {userXp !== null && (
+        <span className="user-xp">| XP : {userXp}</span>
       )}
       <button onClick={onLogout} className="secondary-button">
         Logout

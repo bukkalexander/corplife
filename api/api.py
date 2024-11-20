@@ -45,7 +45,7 @@ async def lifespan(app: FastAPI):
             ],
             AttributeDefinitions=[
                 {"AttributeName": "username", "AttributeType": "S"},
-                {"AttributeName": "score", "AttributeType": "N"},
+                {"AttributeName": "xp", "AttributeType": "N"},
             ],
             ProvisionedThroughput={
                 "ReadCapacityUnits": 5,
@@ -53,10 +53,10 @@ async def lifespan(app: FastAPI):
             },
             GlobalSecondaryIndexes=[
                 {
-                    "IndexName": "ScoreIndex",
+                    "IndexName": "XpIndex",
                     "KeySchema": [
                         {"AttributeName": "username", "KeyType": "HASH"},
-                        {"AttributeName": "score", "KeyType": "RANGE"},
+                        {"AttributeName": "xp", "KeyType": "RANGE"},
                     ],
                     "Projection": {"ProjectionType": "ALL"},
                 }
@@ -65,9 +65,9 @@ async def lifespan(app: FastAPI):
 
         # Insert sample data
         with table.batch_writer() as batch:
-            batch.put_item({"username": "test_user", "score": 100})
-            batch.put_item({"username": "another_user", "score": 200})
-            batch.put_item({"username": "example_user", "score": 300})
+            batch.put_item({"username": "test_user", "xp": 100})
+            batch.put_item({"username": "another_user", "xp": 200})
+            batch.put_item({"username": "example_user", "xp": 300})
 
         print(f"Moto DynamoDB setup complete with table {DYNAMODB_TABLE_NAME_USERS}.")
     else:
@@ -99,10 +99,10 @@ async def get_questions():
     return QUESTIONS
 
 
-@app.get("/user/score")
-async def get_user_score(request: Request):
+@app.get("/user/xp")
+async def get_user_xp(request: Request):
     start_time = time.time()
-    """Fetch user score from DynamoDB."""
+    """Fetch user xp from DynamoDB."""
     try:
         # Extract user claims from the request context
         scope = request.scope
@@ -114,7 +114,7 @@ async def get_user_score(request: Request):
             # Raise an error if username is not present in the claims
             raise HTTPException(status_code=400, detail="Missing username in claims.")
 
-        # Query DynamoDB to get the user's score
+        # Query DynamoDB to get the user's xp
         dynamodb = boto3.resource("dynamodb")
         table = dynamodb.Table(DYNAMODB_TABLE_NAME_USERS)
         response = table.get_item(Key={"username": username})
@@ -127,7 +127,7 @@ async def get_user_score(request: Request):
         # Return user data if found
         return {
             "username": user_data["username"],
-            "score": user_data.get("score", 0),
+            "xp": user_data.get("xp", 0),
         }
 
     except ClientError as e:
@@ -147,7 +147,7 @@ async def get_user_score(request: Request):
     finally:
         end_time = time.time()
         elapsed_time = end_time - start_time
-        logger.debug(f"Execution time for get_user_score: {elapsed_time:.4f} seconds")
+        logger.debug(f"Execution time for get_user_xp: {elapsed_time:.4f} seconds")
 
 
 @app.post("/score", response_model=ScoreData)

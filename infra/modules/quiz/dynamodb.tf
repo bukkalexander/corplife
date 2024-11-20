@@ -47,17 +47,17 @@ resource "aws_dynamodb_table" "corplife-quiz-users" {
     type = "S"  # String type for usernames
   }
 
-  # Score attribute for leaderboard
+  # Xp attribute for leaderboard
   attribute {
-    name = "score"
-    type = "N"  # Numeric type for points or score
+    name = "xp"
+    type = "N"  # Numeric type for points or xp
   }
 
-  # Global Secondary Index (GSI) for leaderboard queries sorted by score
+  # Global Secondary Index (GSI) for leaderboard queries sorted by xp
   global_secondary_index {
-    name               = "ScoreIndex"
+    name               = "XpIndex"
     hash_key           = "username"  # Must have a hash key (use username to make it unique)
-    range_key          = "score"     # Sort by score for leaderboard
+    range_key          = "xp"     # Sort by xp for leaderboard
     projection_type    = "ALL"       # Include all attributes
   }
 

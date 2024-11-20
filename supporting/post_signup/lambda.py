@@ -24,12 +24,12 @@ def handler(event, context):
 
         item = {
             'username': username,
-            'score': 0
+            'xp': 0
         }
 
         try:
             table.put_item(Item=item)
-            logging.info(f"User {username} added to DynamoDB with initial score of 0")
+            logging.info(f"User {username} added to DynamoDB with initial xp of 0")
         except ClientError as e:
             logging.error(f"Error adding user {username} to DynamoDB: {e.response['Error']['Message']}")
 

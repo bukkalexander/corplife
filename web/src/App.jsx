@@ -88,15 +88,15 @@ const fetchScores = async (apiUrl) => {
   }
 };
 
-const fetchUserScore = async (api_url, user) => {
+const fetchUserXp = async (api_url, user) => {
   if (!user || user === "Guest") {
-    console.log("Skipping score fetch for Guest or no user");
+    console.log("Skipping xp fetch for Guest or no user");
     return null;
   }
 
-  const fetchScoreUrl = `${api_url}/user/score`;
+  const fetchScoreUrl = `${api_url}/user/xp`;
   try {
-    console.log("Fetching user score...");
+    console.log("Fetching user xp...");
 
     const session = await fetchAuthSession();
     const idToken = session.tokens.idToken;
@@ -110,14 +110,14 @@ const fetchUserScore = async (api_url, user) => {
     if (!response.ok) {
       // Log error details from the response
       const errorData = await response.json();
-      console.error("Error fetching user score:", errorData.detail);
+      console.error("Error fetching user xp:", errorData.detail);
       return null;
     }
 
     const data = await response.json();
-    return { username: data.username, score: data.score };
+    return { username: data.username, xp: data.xp };
   } catch (error) {
-    console.error("Error fetching user score:", error.message);
+    console.error("Error fetching user xp:", error.message);
     return null;
   }
 };
@@ -134,7 +134,7 @@ function App() {
   const [isFetchingQuestions, setIsFetchingQuestions] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [user, setUser] = useState(null);
-  const [userScore, setUserScore] = useState(null); // Cumulative score from backend
+  const [userXp, setUserXp] = useState(null); // Cumulative score from backend
   const [cognitoConfigured, setCognitoConfigured] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -215,19 +215,19 @@ function App() {
   }, [config]);
 
   useEffect(() => {
-    const loadUserScore = async () => {
+    const loadUserXp = async () => {
       if (!config || !user || user === "Guest") {
-        setUserScore(null); // Default userScore for Guest or no user
+        setUserXp(null); // Default userXp for Guest or no user
         return;
       }
   
-      const fetchedUserScore = await fetchUserScore(config.apiUrl, user);
-      if (fetchedUserScore) {
-        setUserScore(fetchedUserScore.score); // Set the cumulative score
+      const fetchedUserXp = await fetchUserXp(config.apiUrl, user);
+      if (fetchedUserXp) {
+        setUserXp(fetchedUserXp.xp); // Set the cumulative score
       }
     };
   
-    loadUserScore();
+    loadUserXp();
   }, [config, user]);
   
 
@@ -380,7 +380,7 @@ setErrorMessage('');
       {user && (
         <UserBanner
           username={user}
-          userScore={userScore}
+          userXp={userXp}
           onLogout={handleLogout}
         />
       )}
