@@ -1,81 +1,132 @@
 
-## AWS Lambda Event Mocking and Testing Tool (AWS EVENT CLI)
+# Backend Local and Production Environment Documentation
 
-This tool simplifies the process of creating and testing payloads that mimic AWS API Gateway events for Lambda functions. 
-It is especially useful for locally testing FastAPI endpoints secured by a Cognito Authorizer without the need to manually handle complex AWS payload structures.
+## Overview
 
-### Features
+This documentation provides a comprehensive guide to running and testing the application backend in both **production** and **local development** environments. The guide covers:
+- How the application resolves environment configurations.
+- How the application uses middleware to inject mock AWS events.
+- Local development with in-memory DynamoDB tables using `moto`.
 
-- Generates mock AWS event payloads for Lambda functions.
-- Simulates local requests to a FastAPI application using Mangum.
-- Sends HTTP requests to local or remote URLs with generated payloads.
-- Supports saving generated payloads to a file for reuse.
+---
 
+## Production vs Local Development
+
+### **Production**
+- The application runs with real AWS infrastructure, including:
+  - DynamoDB tables.
+  - AWS API Gateway and Lambda.
+  - Cognito for user authentication.
+
+- No mocking tools are used, and all AWS services are accessed directly.
+
+### **Local Development**
+- The application runs on `localhost` with:
+  - **Mock AWS events** injected via middleware.
+  - **In-memory DynamoDB tables** created and managed by `moto`.
+  - The ability to simulate different users via custom headers.
+
+- **Key Differences:**
+  - Middleware is added only in local environments to inject the AWS event context (`aws.event`) into requests.
+  - DynamoDB tables are mocked using `moto` to avoid using real AWS resources.
+
+---
+
+## Configuration
+
+### Environment Detection
+
+The application determines whether it is running locally or in production based on the value of `API_HOST` from the configuration.
+
+- **Localhost Detection:**
+  ```python
+  IS_LOCALHOST = API_HOST in ["localhost", "127.0.0.1"]
+  ```
+  If `IS_LOCALHOST` is `True`:
+  - Middleware for mocking is added.
+  - Mock DynamoDB tables are created using `moto`.
+
+---
+
+## Middleware for Mocking
+
+### MockRequestMiddleware
+
+This middleware is attached **only in local environments**. It:
+- Injects a mock AWS event into the `request.scope`.
+- Uses the `X-Mock-User` HTTP header to simulate different users.
+
+[See middleware.py for more details](middleware.py)
 
 ### Usage
-
-#### Starting the FastAPI Server Locally
-
-To test locally, first start the FastAPI application using Uvicorn. Run the following command:
-
+To simulate a different user in local development, include the `X-Mock-User` header in your request:
 ```bash
-python main.py
+curl -H "X-Mock-User: test_user" http://localhost:8181/user/xp
 ```
 
-This will start the FastAPI application on `localhost:8181`.
+---
 
+## Mocking DynamoDB with `moto`
 
-#### CLI Options
+The application uses `moto` to mock DynamoDB tables in memory during local development.
 
-```bash
-python aws_event_cli.py --username <USERNAME> --url <URL> [OPTIONS]
+### Setup
+In local environments, the application:
+1. Starts a `moto` mock instance.
+2. Creates an in-memory DynamoDB table with predefined data.
+
+[See mock.py for more details](mock.py)
+
+### Clean Up
+Ensure the `moto` mock is stopped after use:
+```python
+def stop_aws_mock(mock):
+    if mock:
+        mock.stop()
 ```
 
-| Option          | Description                                                                 | Required |
-|------------------|-----------------------------------------------------------------------------|----------|
-| `--username`    | Username to include in the mock event payload.                              | Yes      |
-| `--email`       | Email to include in the mock event payload. Default: `test@example.com`.    | No       |
-| `--http-method` | HTTP method for the request. Default: `GET`.                                | No       |
-| `--url`         | Target URL to send the request.                                             | Yes      |
-| `--output`      | File to save the generated payload (optional).                              | No       |
+---
 
-#### Example Commands
+## Running the Application
 
-1. **Generate a mock payload and send a local request**
+### Local Development
 
+1. **Start the Server:**
    ```bash
-   python main.py --username testuser --url http://localhost:8181/user/profile --http-method GET
+   python main.py
    ```
 
-2. **Generate a mock payload and save it to a file**
+2. **Test Mocked Endpoints:**
+   - Default user (`mock_user`):
+     ```bash
+     curl http://localhost:8181/user/xp
+     ```
 
-   ```bash
-   python main.py --username testuser --url http://localhost:8181/user/profile --output payload.json
-   ```
+   - Simulate a different user (`test_user`):
+     ```bash
+     curl -H "X-Mock-User: test_user" http://localhost:8181/user/xp
+     ```
 
-3. **Send the payload to a remote endpoint**
+3. **Verify Mocked DynamoDB Data:**
+   - Example `GET` Request:
+     ```bash
+     curl http://localhost:8181/user/xp
+     ```
+   - Response:
+     ```json
+     {
+         "username": "mock_user",
+         "xp": 123
+     }
+     ```
 
-   ```bash
-   python main.py --username testuser --url https://api.example.com/user/profile
-   ```
+### Production
+1. Deploy the application to AWS Lambda.
+2. Ensure all environment variables and AWS services are configured correctly.
+3. Test endpoints with real AWS resources.
 
-### Local Testing
+---
 
-For local endpoints, the tool uses `Mangum` to simulate AWS Lambda and API Gateway event handling. This eliminates the need for deploying to AWS to test Cognito-secured endpoints.
+## Summary
 
-### Remote Testing
-
-If the provided URL points to a remote server, the tool uses `requests` to send the payload. Make sure the target endpoint is accessible and configured to handle API Gateway events.
-
-### Saving Payloads
-
-To save a generated payload for later use, specify the `--output` option:
-
-```bash
-python aws_event_cli.py --username testuser --url http://localhost:8181/user/profile --output payload.json
-```
-
-### Error Handling
-
-If errors occur during payload generation, local simulation, or remote requests, the tool provides detailed error messages to help debug the issue.
-
+This setup provides a seamless transition between local development and production environments. The middleware and `moto` ensure efficient local testing without requiring real AWS resources, while production uses actual AWS services for accurate data handling.

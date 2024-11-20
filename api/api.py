@@ -1,84 +1,49 @@
 from datetime import datetime, timezone
 from contextlib import asynccontextmanager
+import os
 import time
+import logging
+from typing import List
+
 import boto3
-from moto import mock_aws
 from botocore.exceptions import ClientError
-import json
-from pathlib import Path
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from typing import List
-import logging
+
 from score_data import ScoreData
 from config import API_HOST, DYNAMODB_TABLE_NAME_USERS, DYNAMODB_TABLE_NAME_QUESTIONS, REGION
+from mock import start_aws_mock, stop_aws_mock
+from middleware import MockRequestMiddleware
+from data import QUESTIONS_0 as QUESTIONS
+from question import Question
+from utilities import read_scores, write_scores
 
 # Configure logger
-LOG_LEVEL = "INFO"
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 logging.getLogger("mangum").setLevel(LOG_LEVEL)
 logger = logging.getLogger("mangum")
 
-SCORES_FILE = Path("scores.json")
-
-from data import QUESTIONS_0 as QUESTIONS
-from question import Question
+IS_LOCALHOST = API_HOST in ["localhost", "127.0.0.1"]
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """
     Manage the application's lifespan with setup and teardown logic.
     """
-    IS_LOCALHOST = API_HOST in ["localhost", "127.0.0.1"]
+
     if IS_LOCALHOST:
         print(f"Using Moto to mock DynamoDB for table {DYNAMODB_TABLE_NAME_USERS}.")
 
         # Start Moto mocking
-        mock = mock_aws()
-        mock.start()
-
-        # Setup mocked DynamoDB
-        dynamodb = boto3.resource("dynamodb", region_name=REGION)
-        table = dynamodb.create_table(
-            TableName=DYNAMODB_TABLE_NAME_USERS,
-            KeySchema=[
-                {"AttributeName": "username", "KeyType": "HASH"},
-            ],
-            AttributeDefinitions=[
-                {"AttributeName": "username", "AttributeType": "S"},
-                {"AttributeName": "xp", "AttributeType": "N"},
-            ],
-            ProvisionedThroughput={
-                "ReadCapacityUnits": 5,
-                "WriteCapacityUnits": 5,
-            },
-            GlobalSecondaryIndexes=[
-                {
-                    "IndexName": "XpIndex",
-                    "KeySchema": [
-                        {"AttributeName": "username", "KeyType": "HASH"},
-                        {"AttributeName": "xp", "KeyType": "RANGE"},
-                    ],
-                    "Projection": {"ProjectionType": "ALL"},
-                }
-            ],
-        )
-
-        # Insert sample data
-        with table.batch_writer() as batch:
-            batch.put_item({"username": "test_user", "xp": 100})
-            batch.put_item({"username": "another_user", "xp": 200})
-            batch.put_item({"username": "example_user", "xp": 300})
-
-        print(f"Moto DynamoDB setup complete with table {DYNAMODB_TABLE_NAME_USERS}.")
+        mock = start_aws_mock(region=REGION, user_table_name=DYNAMODB_TABLE_NAME_USERS)
     else:
         mock = None
 
     yield
 
     # Clean up
-    if IS_LOCALHOST and mock:
-        print("Stopping Moto mocking for DynamoDB.")
-        mock.stop()
+    if mock:
+        stop_aws_mock(mock)
 
 
 # Initialize the FastAPI app with the lifespan context
@@ -92,6 +57,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+if IS_LOCALHOST:
+    app.add_middleware(MockRequestMiddleware)
 
 
 @app.get("/questions", response_model=List[Question])
@@ -163,21 +131,6 @@ async def create_score(score_data: ScoreData):
     scores.append(score_data.model_dump())
     write_scores(scores)
     return score_data
-
-
-def read_scores() -> List[ScoreData]:
-    """Read scores from a file."""
-    if not SCORES_FILE.exists():
-        return []
-    with open(SCORES_FILE, "r") as file:
-        return json.load(file)
-
-
-def write_scores(scores: List[ScoreData]):
-    """Write scores to a file."""
-    with SCORES_FILE.open("w") as file:
-        json.dump(scores, file, indent=4)
-
 
 @app.get("/scores", response_model=List[ScoreData])
 async def get_scores():
