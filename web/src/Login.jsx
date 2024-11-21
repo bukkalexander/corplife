@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function Login({ onLogin, onSignUp, onVerify, onResend, onGuestLogin }) {
+function Login({ onLogin, onSignUp, onVerify, onResend, onGuestLogin, errorMessage }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
@@ -8,12 +8,19 @@ function Login({ onLogin, onSignUp, onVerify, onResend, onGuestLogin }) {
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (isVerifying) {
-      onVerify(username, verificationCode);
+      const verificationSuccessful = await onVerify(username, verificationCode);
+      if (verificationSuccessful) {
+        setIsVerifying(false); // Reset to login view after verification
+        setIsSignUp(false);     // Ensure it's back to login mode
+      }
     } else if (isSignUp) {
-      onSignUp(username, password, email).then(() => setIsVerifying(true));
+      const signUpSuccessful = await onSignUp(username, password, email);
+      if (signUpSuccessful) {
+        setIsVerifying(true); // Only proceed to verification if sign-up is successful
+      }
     } else {
       onLogin(username, password);
     }
@@ -87,6 +94,8 @@ function Login({ onLogin, onSignUp, onVerify, onResend, onGuestLogin }) {
             </div>
           </>
         )}
+
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
 
         <button type="submit" className="primary-button">
           {isVerifying ? 'Submit Code' : isSignUp ? 'Sign Up' : 'Login'}

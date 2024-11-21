@@ -7,6 +7,7 @@ import {
   resendSignUpCode,
   confirmSignUp,
   getCurrentUser,
+  fetchAuthSession,
 } from '@aws-amplify/auth';
 
 import Login from './Login.jsx';
@@ -87,6 +88,40 @@ const fetchScores = async (apiUrl) => {
   }
 };
 
+const fetchUserXp = async (api_url, user) => {
+  if (!user || user === "Guest") {
+    console.log("Skipping xp fetch for Guest or no user");
+    return null;
+  }
+
+  const fetchScoreUrl = `${api_url}/user/xp`;
+  try {
+    console.log("Fetching user xp...");
+
+    const session = await fetchAuthSession();
+    const idToken = session.tokens.idToken;
+
+    const response = await fetch(fetchScoreUrl, {
+      headers: {
+        Authorization: `${idToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      // Log error details from the response
+      const errorData = await response.json();
+      console.error("Error fetching user xp:", errorData.detail);
+      return null;
+    }
+
+    const data = await response.json();
+    return { username: data.username, xp: data.xp };
+  } catch (error) {
+    console.error("Error fetching user xp:", error.message);
+    return null;
+  }
+};
+
 function App() {
   const [config, setConfig] = useState(null);
   const [questions, setQuestions] = useState([]);
@@ -96,11 +131,12 @@ function App() {
   const [score, setScore] = useState(0);
   const [scoreData, setScoreData] = useState(null);
   const [scoreDataList, setScoreDataList] = useState([]);
-
   const [isFetchingQuestions, setIsFetchingQuestions] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [user, setUser] = useState(null);
+  const [userXp, setUserXp] = useState(null); // Cumulative score from backend
   const [cognitoConfigured, setCognitoConfigured] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     const loadConfig = async () => {
@@ -178,20 +214,37 @@ function App() {
     loadQuestions();
   }, [config]);
 
-  // Handle sign in
+  useEffect(() => {
+    const loadUserXp = async () => {
+      if (!config || !user || user === "Guest") {
+        setUserXp(null); // Default userXp for Guest or no user
+        return;
+      }
+  
+      const fetchedUserXp = await fetchUserXp(config.apiUrl, user);
+      if (fetchedUserXp) {
+        setUserXp(fetchedUserXp.xp); // Set the cumulative score
+      }
+    };
+  
+    loadUserXp();
+  }, [config, user]);
+  
+
   const handleLogin = async (username, password) => {
     try {
       const user = await signIn({ username, password });
       setUser(username);
+      setErrorMessage('');
       console.log('Logged in as:', username);
     } catch (error) {
       console.error('Login failed:', error);
+      setErrorMessage('Incorrect username or password.');
     }
   };
 
   const handleSignUp = async (username, password, email) => {
     try {
-      // Use the updated structure with an options object
       const { user } = await signUp({
         username,
         password,
@@ -202,29 +255,37 @@ function App() {
           autoSignIn: true,
         },
       });
-
+setErrorMessage('');
       console.log('Sign-up successful:', user);
+      return true;
     } catch (error) {
       console.error('Sign-up failed:', error);
+      setErrorMessage('Sign-up failed. Please check your details and try again.');
+      return false;
     }
   };
 
   const handleResendCode = async (username) => {
     try {
       await resendSignUpCode({ username });
+      setErrorMessage('');
       console.log('Verification code resent');
     } catch (error) {
       console.error('Resend code failed:', error);
+      setErrorMessage('Failed to resend verification code. Please try again.');
     }
   };
 
   const handleVerify = async (username, confirmationCode) => {
     try {
       await confirmSignUp({ username, confirmationCode });
+      setErrorMessage(''); // Clear any error messages
       console.log('Verification successful');
-      // Optionally auto-login or redirect after verification
+      return true; // Indicate that verification was successful
     } catch (error) {
       console.error('Verification failed:', error);
+      setErrorMessage('Verification failed. Please check your code and try again.');
+      return false; // Indicate verification failed
     }
   };
 
@@ -308,6 +369,7 @@ function App() {
         onVerify={handleVerify}
         onResend={handleResendCode}
         onGuestLogin={handleGuestLogin}
+        errorMessage={errorMessage}
       />
     );
   }
@@ -315,7 +377,13 @@ function App() {
   return (
     <>
       {/* Display UserBanner if the user is logged in */}
-      {user && <UserBanner username={user} onLogout={handleLogout} />}
+      {user && (
+        <UserBanner
+          username={user}
+          userXp={userXp}
+          onLogout={handleLogout}
+        />
+      )}
 
       {isQuizCompleted ? (
         <LeaderBoard

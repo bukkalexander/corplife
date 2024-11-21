@@ -1,27 +1,65 @@
-from datetime import datetime
-import json
-from pathlib import Path
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from datetime import datetime, timezone
+from contextlib import asynccontextmanager
+import os
+import time
+import logging
 from typing import List
 
+import boto3
+from botocore.exceptions import ClientError
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
 
+from score_data import ScoreData
+from config import API_HOST, DYNAMODB_TABLE_NAME_USERS, DYNAMODB_TABLE_NAME_QUESTIONS, REGION
+from mock import start_aws_mock, stop_aws_mock
+from middleware import MockRequestMiddleware
 from data import QUESTIONS_0 as QUESTIONS
 from question import Question
-from score_data import ScoreData
+from utilities import read_scores, write_scores
 
-SCORES_FILE = Path("scores.json")
+# Configure logger
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
+logging.getLogger("mangum").setLevel(LOG_LEVEL)
+logger = logging.getLogger("mangum")
 
-app = FastAPI()
+IS_LOCALHOST = API_HOST in ["localhost", "127.0.0.1"]
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """
+    Manage the application's lifespan with setup and teardown logic.
+    """
+
+    if IS_LOCALHOST:
+        print(f"Using Moto to mock DynamoDB for table {DYNAMODB_TABLE_NAME_USERS}.")
+
+        # Start Moto mocking
+        mock = start_aws_mock(region=REGION, user_table_name=DYNAMODB_TABLE_NAME_USERS)
+    else:
+        mock = None
+
+    yield
+
+    # Clean up
+    if mock:
+        stop_aws_mock(mock)
+
+
+# Initialize the FastAPI app with the lifespan context
+app = FastAPI(lifespan=lifespan)
 
 # Allow requests from the web server domain origin
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # needed locally, but will be overriden in API Gatewat in production
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+if IS_LOCALHOST:
+    app.add_middleware(MockRequestMiddleware)
 
 
 @app.get("/questions", response_model=List[Question])
@@ -29,32 +67,73 @@ async def get_questions():
     return QUESTIONS
 
 
+@app.get("/user/xp")
+async def get_user_xp(request: Request):
+    start_time = time.time()
+    """Fetch user xp from DynamoDB."""
+    try:
+        # Extract user claims from the request context
+        scope = request.scope
+        event = scope.get("aws.event", {})
+        claims = event.get("requestContext", {}).get("authorizer", {}).get("claims", {})
+        username = claims.get("cognito:username", None)
+
+        if not username:
+            # Raise an error if username is not present in the claims
+            raise HTTPException(status_code=400, detail="Missing username in claims.")
+
+        # Query DynamoDB to get the user's xp
+        dynamodb = boto3.resource("dynamodb")
+        table = dynamodb.Table(DYNAMODB_TABLE_NAME_USERS)
+        response = table.get_item(Key={"username": username})
+        user_data = response.get("Item", None)
+
+        if not user_data:
+            # Raise a 404 error if the user is not found in DynamoDB
+            raise HTTPException(status_code=404, detail=f"User '{username}' not found in the database.")
+
+        # Return user data if found
+        return {
+            "username": user_data["username"],
+            "xp": user_data.get("xp", 0),
+        }
+
+    except ClientError as e:
+        # Handle DynamoDB errors and raise an HTTPException
+        raise HTTPException(
+            status_code=500,
+            detail=f"DynamoDB error: {e.response['Error']['Message']}"
+        )
+
+    except Exception as e:
+        # Handle other unexpected errors
+        raise HTTPException(
+            status_code=500,
+            detail=f"Unexpected error: {str(e)}"
+        )
+    
+    finally:
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+        logger.debug(f"Execution time for get_user_xp: {elapsed_time:.4f} seconds")
+
+
 @app.post("/score", response_model=ScoreData)
 async def create_score(score_data: ScoreData):
-    
+    """Save a new score."""
     scores = read_scores()
-    
+
     # Find the highest existing ID and increment by 1
     max_id = max((score['id'] for score in scores), default=0)
     score_data.id = max_id + 1
-    score_data.timestamp = datetime.utcnow().isoformat()
+    score_data.timestamp = datetime.now(timezone.utc).isoformat()
 
-    scores.append(score_data.dict())
+    scores.append(score_data.model_dump())
     write_scores(scores)
     return score_data
 
-def read_scores() -> List[ScoreData]:
-    if not SCORES_FILE.exists():
-        return []
-    with open(SCORES_FILE, "r") as file:
-        return json.load(file)
-
-def write_scores(scores: List[ScoreData]):
-    with SCORES_FILE.open("w") as file:
-        json.dump(scores, file, indent=4)
-
-
 @app.get("/scores", response_model=List[ScoreData])
 async def get_scores():
+    """Fetch all scores."""
     scores = read_scores()
     return scores

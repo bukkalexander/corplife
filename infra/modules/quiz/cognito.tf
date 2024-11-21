@@ -31,6 +31,13 @@ resource "aws_cognito_user_pool" "user_pool" {
       priority = 1
     }
   }
+
+  lambda_config {
+    post_confirmation = aws_lambda_function.post_confirmation_trigger.arn
+  }
+
+   depends_on = [ aws_lambda_function.post_confirmation_trigger ]
+
 }
 
 # Create App Client for User Pool (without client secret)

@@ -141,6 +141,12 @@
     color: #555;
 }
 
+#userBanner .user-xp {
+    font-weight: bold;
+    color: #007bff; 
+    font-size: 0.9rem;
+}
+
 /* login.css */
 .guest-access {
     margin-top: 1em;
@@ -157,3 +163,8 @@
     color: #0056b3; /* Darker blue on hover */
   }
   
+  .error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 10px;
+  }

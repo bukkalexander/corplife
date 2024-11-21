@@ -5,20 +5,28 @@
 # Define BASE_DIR as the directory where this Makefile is located
 BASE_DIR := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 
+# Base directory for archive outputs
+ARCHIVES_DIR := $(BASE_DIR)/infra/modules/quiz/lambda
+
 # Python dependency paths for Lambda layer
 PIP_TARGET := $(BASE_DIR)/infra/modules/quiz/python-libs/
 REQUIREMENTS_FILE := $(BASE_DIR)/api/requirements.txt
 
 # Lambda function archive paths
 LAMBDA_FUNC_SOURCE := $(BASE_DIR)/api/
-LAMBDA_FUNC_DEST := $(BASE_DIR)/infra/modules/quiz/lambda/corplife_quiz.zip
+LAMBDA_FUNC_DEST := $(ARCHIVES_DIR)/corplife_quiz.zip
 
 # Lambda layer archive paths
 LAMBDA_LAYER_SOURCE := $(BASE_DIR)/infra/modules/quiz/python-libs/
-LAMBDA_LAYER_DEST := $(BASE_DIR)/infra/modules/quiz/lambda/python_deps.zip
+LAMBDA_LAYER_DEST := $(ARCHIVES_DIR)/python_deps.zip
 
-# Base directory for archive outputs
-ARCHIVES_DIR := $(BASE_DIR)/infra/modules/quiz/lambda/
+# Lambda reconciliation function archive paths
+LAMBDA_RECON_FUNC_SOURCE := $(BASE_DIR)/supporting/reconciliation
+LAMBDA_RECON_FUNC_DEST := $(ARCHIVES_DIR)/reconciliation.zip
+
+# Lambda post signup function archive paths
+LAMBDA_POST_SIGNUP_FUNC_SOURCE := $(BASE_DIR)/supporting/post_signup
+LAMBDA_POST_SIGNUP_FUNC_DEST := $(ARCHIVES_DIR)/post_signup.zip
 
 # Tofu (Terraform equivalent) paths
 TOFU_DIR := $(BASE_DIR)/infra/main
@@ -93,9 +101,19 @@ lambda: check-tools $(ARCHIVES_DIR)
 lambda-layer: check-tools $(ARCHIVES_DIR)
 	cd $(LAMBDA_LAYER_SOURCE) && zip -r $(LAMBDA_LAYER_DEST) .
 
+# Create archive for lambda reconciliation function
+.PHONY: lambda-reconciliation
+lambda-reconciliation: check-tools $(ARCHIVES_DIR)
+	cd $(LAMBDA_RECON_FUNC_SOURCE) && zip -r $(LAMBDA_RECON_FUNC_DEST) .
+
+# Create archive for lambda post signup function
+.PHONY: lambda-post-signup
+lambda-post-signup: check-tools $(ARCHIVES_DIR)
+	cd $(LAMBDA_POST_SIGNUP_FUNC_SOURCE) && zip -r $(LAMBDA_POST_SIGNUP_FUNC_DEST) .
+
 # Re-archive both lambda and lambda-layer targets
 .PHONY: archive
-archive: lambda lambda-layer
+archive: lambda lambda-layer lambda-reconciliation lambda-post-signup
 
 # ---------------------------------------------------------------------------
 # HIGH-LEVEL TARGETS FOR ARCHIVES
@@ -103,7 +121,7 @@ archive: lambda lambda-layer
 
 # Prepare everything needed for deployment (install dependencies and create archives)
 .PHONY: prepare
-prepare: install lambda lambda-layer
+prepare: install archive
 	@echo "Preparation complete: dependencies installed, archives created."
 
 # ---------------------------------------------------------------------------
