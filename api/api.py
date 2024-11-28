@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 from contextlib import asynccontextmanager
 import os
+import random
 import time
 import logging
 from typing import List
@@ -12,9 +13,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from score_data import ScoreData
 from config import API_HOST, DYNAMODB_TABLE_NAME_USERS, DYNAMODB_TABLE_NAME_QUESTIONS, REGION
-from mock import start_aws_mock, stop_aws_mock
+from mocking import start_aws_mock, stop_aws_mock
 from middleware import MockRequestMiddleware
-from data import QUESTIONS_0 as QUESTIONS
 from question import Question
 from utilities import read_scores, write_scores
 
@@ -22,6 +22,7 @@ from utilities import read_scores, write_scores
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 logging.getLogger("mangum").setLevel(LOG_LEVEL)
 logger = logging.getLogger("mangum")
+
 
 IS_LOCALHOST = API_HOST in ["localhost", "127.0.0.1"]
 
@@ -35,8 +36,9 @@ async def lifespan(app: FastAPI):
         print(f"Using Moto to mock DynamoDB for table {DYNAMODB_TABLE_NAME_USERS}.")
 
         # Start Moto mocking
-        mock = start_aws_mock(region=REGION, user_table_name=DYNAMODB_TABLE_NAME_USERS)
+        mock = start_aws_mock(region=REGION, user_table_name=DYNAMODB_TABLE_NAME_USERS, questions_table_name=DYNAMODB_TABLE_NAME_QUESTIONS)
     else:
+        print("Calling real DynamoDB.")
         mock = None
 
     yield
@@ -64,7 +66,39 @@ if IS_LOCALHOST:
 
 @app.get("/questions", response_model=List[Question])
 async def get_questions():
-    return QUESTIONS
+    """
+    Fetch all questions from a random quiz ID in DynamoDB.
+    """
+    dynamodb = boto3.resource("dynamodb")
+    table = dynamodb.Table(DYNAMODB_TABLE_NAME_QUESTIONS)
+
+    # Scan the DynamoDB table to fetch all unique quiz IDs
+    response = table.scan(ProjectionExpression="quizID")
+    quiz_ids = list({item["quizID"] for item in response.get("Items", [])})
+
+    if not quiz_ids:
+        return []  # Return an empty list if no quiz IDs are found
+
+    # Pick a random quiz ID
+    random_quiz_id = random.choice(quiz_ids)
+
+    # Query for all questions belonging to the random quiz ID
+    response = table.query(
+        KeyConditionExpression=boto3.dynamodb.conditions.Key("quizID").eq(random_quiz_id)
+    )
+
+    questions_data = response.get("Items", [])
+    # Transform the items into Question objects
+    questions = [
+        Question(
+            text=question["text"],
+            answers=question["answers"],
+            correctAnswer=int(question["correctAnswer"]),  # Ensure integer
+        )
+        for question in questions_data
+    ]
+
+    return questions
 
 
 @app.get("/user/xp")
