@@ -39,6 +39,7 @@ resource "aws_iam_role_policy" "lambda_dynamodb_policy" {
           "dynamodb:UpdateItem",
           "dynamodb:DeleteItem",
           "dynamodb:Scan",
+          "dynamodb:Query"
         ],
         Resource = [
           "${aws_dynamodb_table.corplife-quiz-questions.arn}",
