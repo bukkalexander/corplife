@@ -89,7 +89,7 @@ $(ARCHIVES_DIR) $(PIP_TARGET) $(NPM_DEST):
 # Install Python packages to target directory
 .PHONY: install
 install: $(PIP_TARGET)
-	pip install -r $(REQUIREMENTS_FILE) -t $(PIP_TARGET)/python --upgrade
+	pip install -r $(REQUIREMENTS_FILE) --platform manylinux2014_x86_64 -t $(PIP_TARGET)/python --only-binary=:all: --upgrade
 
 # Create archive for lambda function code
 .PHONY: lambda
