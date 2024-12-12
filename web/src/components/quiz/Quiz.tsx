@@ -71,13 +71,13 @@ const Quiz: React.FC = () => {
       <Form onSubmit={handleSubmitAnswer}>
         {currentQuestion.answers.map((answer, index) => (
           <Answer
-          key={index}
-          index={index}
-          groupId="answers"
-          selectedAnswerIndex={selectedAnswerIndex}
-          correctAnswerIndex={currentQuestion.correctAnswerIndex}
-          isSubmitted={isAnswerSubmitted}
-          onSelected={handleAnswerSelected}
+            key={index}
+            index={index}
+            groupId="answers"
+            selectedAnswerIndex={selectedAnswerIndex}
+            correctAnswerIndex={currentQuestion.correctAnswerIndex}
+            isSubmitted={isAnswerSubmitted}
+            onSelected={handleAnswerSelected}
           >
             {answer.text}
           </Answer>
