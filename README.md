@@ -1,4 +1,4 @@
-
+![CI](https://github.com/bukkalexander/corplife/actions/workflows/check.yml/badge.svg)
 # Quiz App
 
 ## Overview
