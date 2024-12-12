@@ -9,6 +9,9 @@ jobs:
   format-check:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Setup Node
         uses: ./.github/actions/setup-node
 
@@ -19,6 +22,9 @@ jobs:
   lint-check:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Setup Node
         uses: ./.github/actions/setup-node
 
@@ -29,6 +35,9 @@ jobs:
   commit-check:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Setup Node
         uses: ./.github/actions/setup-node
 

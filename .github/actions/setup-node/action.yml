@@ -1,12 +1,8 @@
 name: Setup Node.js and Install Dependencies
-description: Checkout repository, set up Node.js, and install dependencies
+description: Set up Node.js and install dependencies
 
 runs:
   using: composite
-  steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
