@@ -1,0 +1,31 @@
+name: Check
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'latest'
+
+      - name: Install web dependencies
+        run: npm install
+        working-directory: web
+
+      - name: Format check
+        run: npm run format:check
+        working-directory: web
+
+      - name: Lint check
+        run: npm run lint:check
+        working-directory: web
