@@ -1,8 +1,8 @@
 {
-    "apiUrl": "http://localhost:8181",
-    "region": "eu-north-1",
-    "userPoolId": "eu-north-1_fuvyct3IF",
-    "userPoolWebClientId": "10q716rbn6uhcqmhsqsfbdgsc",
-    "DYNAMODB_TABLE_NAME_USERS": "UsersTable",
-    "DYNAMODB_TABLE_NAME_QUESTIONS": "QuestionsTable"
+  "apiUrl": "http://localhost:8181",
+  "region": "eu-north-1",
+  "userPoolId": "eu-north-1_fuvyct3IF",
+  "userPoolWebClientId": "10q716rbn6uhcqmhsqsfbdgsc",
+  "DYNAMODB_TABLE_NAME_USERS": "UsersTable",
+  "DYNAMODB_TABLE_NAME_QUESTIONS": "QuestionsTable"
 }
