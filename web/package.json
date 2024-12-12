@@ -11,7 +11,7 @@
     "lint": "eslint . --fix",
     "format:check": "prettier --check .",
     "format": "prettier --write .",
-    "commitlint": "commitlint --from=HEAD~1 --to=HEAD"
+    "commitlint": "commitlint --edit"
   },
   "dependencies": {
     "aws-amplify": "^6.8.0",
