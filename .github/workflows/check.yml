@@ -16,7 +16,8 @@ jobs:
         uses: ./.github/actions/setup-node
 
       - name: Format check
-        run: npm run format:check
+        run: |
+          npm run format:check
         working-directory: web
 
   lint-check:
@@ -29,7 +30,8 @@ jobs:
         uses: ./.github/actions/setup-node
 
       - name: Lint check
-        run: npm run lint:check
+        run: |
+          npm run lint:check
         working-directory: web
 
   commit-check:
@@ -42,5 +44,6 @@ jobs:
         uses: ./.github/actions/setup-node
 
       - name: Commit check
-        run: npm run commitlint
+        run: |
+          npm run commitlint
         working-directory: web

@@ -10,5 +10,6 @@ runs:
         node-version: 'latest'
 
     - name: Install web dependencies
-      run: npm install
+      run: |
+        npm install
       working-directory: web
