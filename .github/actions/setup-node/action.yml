@@ -3,6 +3,7 @@ description: Set up Node.js and install dependencies
 
 runs:
   using: composite
+  steps:
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
