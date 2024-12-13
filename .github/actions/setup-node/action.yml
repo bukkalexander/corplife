@@ -11,6 +11,6 @@ runs:
 
     - name: Install web dependencies
       run: |
-        npm install
+        npm ci
       working-directory: web
       shell: bash
