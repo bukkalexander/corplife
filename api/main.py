@@ -3,7 +3,7 @@
 import uvicorn
 
 from api import app
-from config import API_HOST, API_PORT
+from api.old_config import API_HOST, API_PORT
 
 
 RELOAD = True
