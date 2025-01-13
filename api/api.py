@@ -1,6 +1,7 @@
 from typing import List
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import Depends
 
 from models import Quiz
 
@@ -16,4 +17,4 @@ app.add_middleware(
 
 @app.get("/quizzes", response_model=List[Quiz])
 async def get_quizzes(quiz_service: QuizService = Depends(get_quiz_service)):
-    return await quiz_service.get_all_quizzes()
+    return await quiz_service.get_quizzes()

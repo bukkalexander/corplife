@@ -23,7 +23,7 @@ class QuizService:
     def __init__(self, quiz_repo: QuizRepo):
         self.quiz_repo = quiz_repo
 
-    async def get_all_quizzes(self) -> List[Quiz]:
+    async def get_quizzes(self) -> List[Quiz]:
         quizzes = await self.quiz_repo.get_quizzes()
         return [quiz_entity_to_quiz(quiz) for quiz in quizzes]
 
